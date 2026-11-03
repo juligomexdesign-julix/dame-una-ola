@@ -60,6 +60,8 @@ nav a:hover{transform:translateY(-3px);color:#d86fa0}
 .tape span{font-weight:900;font-stretch:125%;font-size:clamp(30px,4.2vw,54px);line-height:1;text-transform:uppercase;letter-spacing:-.01em}
 .tape svg{width:.9em;height:.9em;font-size:clamp(30px,4.2vw,54px);flex:none}
 @keyframes tape{to{transform:translateX(-50%)}}
+.tape-q{border-top:2px solid var(--ink)}
+.tape-track.rev{animation-duration:22s}
 
 /* productos */
 .products{padding:clamp(48px,7vw,96px) clamp(16px,5vw,64px) clamp(56px,8vw,110px)}
@@ -94,7 +96,7 @@ nav a:hover{transform:translateY(-3px);color:#d86fa0}
 .p-sun img{height:calc(100% - 36px);object-position:50% 30%}
 .p-board{right:2%;top:34%;width:46%;height:62%;transform:rotate(5deg);z-index:3}
 .p-board img{height:calc(100% - 36px);object-position:60% 20%}
-.tape{position:absolute;width:96px;height:28px;border:2px solid var(--ink);background:repeating-conic-gradient(var(--check) 0 25%, #fff 0 50%) 0 0/14px 14px;opacity:.95}
+.ptape{position:absolute;width:96px;height:28px;border:2px solid var(--ink);background:repeating-conic-gradient(var(--check) 0 25%, #fff 0 50%) 0 0/14px 14px;opacity:.95}
 .t1{top:-14px;left:44%;transform:rotate(4deg)}
 .t2{top:-12px;left:22%;transform:rotate(-12deg)}
 .t3{top:-14px;right:18%;transform:rotate(10deg)}
@@ -113,7 +115,7 @@ nav a:hover{transform:translateY(-3px);color:#d86fa0}
 .about-sea::after{content:"";position:absolute;left:0;right:0;bottom:0;height:30px;background:var(--sea)}
 
 /* contacto */
-.contact{border-top:2px solid var(--ink);padding:clamp(48px,7vw,96px) clamp(16px,5vw,64px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,5vw,72px);max-width:1280px;margin:0 auto}
+.contact{padding:clamp(48px,7vw,96px) clamp(16px,5vw,64px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,5vw,72px);max-width:1280px;margin:0 auto}
 .contact h2{font-weight:900;font-stretch:125%;font-size:clamp(40px,6vw,84px);line-height:.92;text-transform:uppercase;margin:0 0 20px;letter-spacing:-.02em}
 .contact .lead{font-stretch:100%;font-weight:400;font-size:17px;line-height:1.55;max-width:40ch;margin:0 0 24px}
 .contact .meta{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-stretch:100%;font-size:15px}
@@ -166,7 +168,7 @@ form.cf{border:2px solid var(--ink);padding:clamp(18px,2.6vw,30px);display:grid;
 .chat .demo{font-stretch:100%;font-size:11px;text-align:center;padding:4px;border-top:2px solid var(--ink);color:#555}
 
 @media (max-width:900px){ :root{--s:3px} .contact{grid-template-columns:1fr} .about-grid{grid-template-columns:1fr} .collage{max-width:620px;margin:0 auto;width:100%} .grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
-@media (max-width:560px){ :root{--s:2px;--phw:min(84vw,360px)} .ph{padding:6px 6px 0;box-shadow:4px 4px 0 var(--ink)} .ph figcaption{font-size:10px;padding:5px 0 7px} .p-surf img,.p-sun img,.p-board img{height:calc(100% - 26px)} .tape{width:64px;height:20px} form.cf{grid-template-columns:1fr} .chat-btn .hint{display:none} .grid{grid-template-columns:1fr} .tape{background-size:28px 28px;padding:14px 0} }
+@media (max-width:560px){ :root{--s:2px;--phw:min(84vw,360px)} .ph{padding:6px 6px 0;box-shadow:4px 4px 0 var(--ink)} .ph figcaption{font-size:10px;padding:5px 0 7px} .p-surf img,.p-sun img,.p-board img{height:calc(100% - 26px)} .ptape{width:64px;height:20px} form.cf{grid-template-columns:1fr} .chat-btn .hint{display:none} .grid{grid-template-columns:1fr} .tape{background-size:28px 28px;padding:14px 0} }
 </style>
 </head>
 <body>
@@ -233,6 +235,7 @@ form.cf{border:2px solid var(--ink);padding:clamp(18px,2.6vw,30px);display:grid;
   </div>
 </section>
 
+<div class="tape tape-q" aria-hidden="true"><div class="tape-track rev"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Questions?</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Questions?</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Questions?</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Questions?</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Questions?</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Questions?</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Questions?</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Questions?</span></div></div>
 <section class="contact" id="contact" aria-labelledby="contactT">
   <div>
     <h2 id="contactT">Contact</h2>
@@ -242,7 +245,6 @@ form.cf{border:2px solid var(--ink);padding:clamp(18px,2.6vw,30px);display:grid;
       <li><b>Replies</b>Usually within 48 hours</li>
       <li><b>Live chat</b>Bottom right corner</li>
     </ul>
-    <div class="checkline" aria-hidden="true"></div>
   </div>
 
   <form class="cf" id="cf" novalidate>
@@ -270,9 +272,9 @@ form.cf{border:2px solid var(--ink);padding:clamp(18px,2.6vw,30px);display:grid;
 
   <div class="about-grid">
     <div class="collage" aria-label="Photos of Julia, founder of Dame una Ola">
-      <figure class="ph p-surf"><img src="a/julia-2.webp" alt="Julia surfing a barrel in a pink swimsuit"><figcaption>Chasing the barrel</figcaption><i class="tape t1"></i></figure>
-      <figure class="ph p-sun"><img src="a/julia-1.webp" alt="Julia with pink hair shading her eyes from the sun"><figcaption>Sun's out</figcaption><i class="tape t2"></i></figure>
-      <figure class="ph p-board"><img src="a/julia-3.webp" alt="Julia smiling next to her surfboard after a session"><figcaption>Post-session</figcaption><i class="tape t3"></i></figure>
+      <figure class="ph p-surf"><img src="a/julia-2.webp" alt="Julia surfing a barrel in a pink swimsuit"><figcaption>Chasing the barrel</figcaption><i class="ptape t1"></i></figure>
+      <figure class="ph p-sun"><img src="a/julia-1.webp" alt="Julia with pink hair shading her eyes from the sun"><figcaption>Sun's out</figcaption><i class="ptape t2"></i></figure>
+      <figure class="ph p-board"><img src="a/julia-3.webp" alt="Julia smiling next to her surfboard after a session"><figcaption>Post-session</figcaption><i class="ptape t3"></i></figure>
       <img class="stk heart1" src="a/heart.png" alt="" aria-hidden="true">
       <img class="stk heart2" src="a/heart.png" alt="" aria-hidden="true">
     </div>
@@ -351,7 +353,7 @@ function tick(t){
   requestAnimationFrame(tick);
 }
 if (!reduce) requestAnimationFrame(tick);
-if (reduce) document.querySelector('.tape-track').style.animation='none';
+if (reduce) document.querySelectorAll('.tape-track').forEach(t=>t.style.animation='none');
 
 /* rutas: #about muestra la página About, lo demás la home */
 const home=document.getElementById('home'), aboutV=document.getElementById('aboutView');
