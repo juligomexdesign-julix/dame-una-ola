@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dame una Ola — Pre-order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Blanco puro, Nokia rosa fotográfico al centro, olas pixel art en loop abajo */
+  --paper:#ffffff;
+  --ink:#111111;
+  --sea:#47C2EC;
+  --foam:#A8E0F3;
+  --pink:#E8A6C4;
+  --display:"Archivo","Arial Black",Impact,sans-serif;
+  --s:3.5px;                             /* tamaño de un píxel de ola */
+  --check:#F6C6DE;
+  --phw:clamp(250px,33vw,460px);         /* ancho del teléfono */
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html,body,a,button{cursor:url("a/cursor.png") 1 1, default}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+:focus-visible{outline:3px solid var(--sea);outline-offset:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+nav{padding:clamp(24px,4vw,44px) 16px 0;position:relative;z-index:5}
+nav ul{display:flex;justify-content:center;gap:clamp(22px,4.4vw,54px);list-style:none;margin:0;padding:0}
+nav a{font-weight:900;font-stretch:125%;font-size:clamp(18px,2.6vw,36px);letter-spacing:-.01em;text-transform:uppercase;color:var(--ink);text-decoration:none;display:inline-block;transition:transform .15s}
+nav a[aria-current]{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:8px}
+nav a:hover{transform:translateY(-3px);color:#d86fa0}
+
+.hero{position:relative;min-height:max(calc(var(--phw) * 1.9), calc(100svh - 190px));display:flex;flex-direction:column;align-items:center;justify-content:flex-end;overflow:hidden}
+.stack{position:relative;width:var(--phw);padding-top:calc(var(--phw) * .5);margin-bottom:calc(var(--phw) * -.2)}
+.phone{width:100%;user-select:none;-webkit-user-drag:none}
+.brand{position:absolute;top:0;left:50%;width:calc(var(--phw) * 1.15);transform:translateX(-50%);aspect-ratio:801/420;z-index:2;pointer-events:none}
+.brand .arc{position:absolute;inset:0 0 auto 0;width:100%}
+.cat{position:absolute;left:50%;bottom:-12%;width:37%;transform:translateX(-50%);aspect-ratio:310/252}
+.cat img{position:absolute}
+.cat .head{inset:0;width:100%;height:100%}
+.cat .sp{width:17.42%;height:23.6%;top:46.83%}
+.cat .sl{left:21.61%}
+.cat .sr2{left:60.65%}
+.cat .star{left:41.94%;top:20.24%;width:17.74%;height:26.19%}
+
+.waves{position:absolute;left:0;right:0;bottom:0;height:calc(var(--s) * 20);z-index:3;pointer-events:none;
+  background:url("a/wave-tile.png") 0 0 / calc(var(--s) * 24) calc(var(--s) * 20) repeat-x;
+  image-rendering:pixelated;image-rendering:crisp-edges}
+
+
+/* cinta checkerboard */
+.tape{position:relative;z-index:4;overflow:hidden;white-space:nowrap;border-block:0;
+  background:repeating-conic-gradient(var(--check) 0 25%, #fff 0 50%) 0 0 / 40px 40px;padding:20px 0}
+.tape-track{display:inline-flex;align-items:center;gap:.55em;animation:tape 18s linear infinite;will-change:transform}
+.tape span{font-weight:900;font-stretch:125%;font-size:clamp(30px,4.2vw,54px);line-height:1;text-transform:uppercase;letter-spacing:-.01em}
+.tape svg{width:.9em;height:.9em;font-size:clamp(30px,4.2vw,54px);flex:none}
+@keyframes tape{to{transform:translateX(-50%)}}
+
+/* productos */
+.products{padding:clamp(48px,7vw,96px) clamp(16px,5vw,64px) clamp(56px,8vw,110px)}
+.products h2{font-weight:900;font-stretch:125%;font-size:clamp(28px,4vw,52px);text-transform:uppercase;line-height:1;margin:0 0 clamp(24px,3vw,40px);text-align:center;letter-spacing:-.01em}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,32px);max-width:1280px;margin:0 auto}
+.card{background:#fff;border:2px solid var(--ink);display:flex;flex-direction:column}
+.card figure{margin:0;border-bottom:2px solid var(--ink);aspect-ratio:4/5;overflow:hidden;background:#f4f4f2}
+.card figure img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;transition:transform .5s ease}
+.card:hover figure img{transform:scale(1.04)}
+.card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card .tag{align-self:flex-start;font-weight:800;font-stretch:100%;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--ink);padding:3px 8px;background:var(--check)}
+.card h3{margin:0;font-weight:900;font-stretch:115%;font-size:clamp(18px,1.6vw,22px);line-height:1.1;text-transform:uppercase;text-wrap:balance}
+.card p{margin:0;font-family:"Archivo",system-ui,sans-serif;font-stretch:100%;font-weight:400;font-size:15px;line-height:1.5;color:#2b2b2b;flex:1}
+.card .btn{margin-top:6px;display:block;text-align:center;text-decoration:none;color:var(--ink);font-weight:900;font-stretch:125%;font-size:16px;text-transform:uppercase;border:2px solid var(--ink);padding:12px;background:#fff;transition:background .15s,color .15s}
+.card .btn:hover{background:var(--ink);color:#fff}
+
+
+
+/* about */
+.about{padding:clamp(20px,3vw,40px) clamp(16px,5vw,64px) clamp(40px,6vw,80px);max-width:1320px;margin:0 auto}
+.about-logo{display:block;position:relative;width:clamp(170px,20vw,260px);aspect-ratio:801/470;margin:0 auto clamp(28px,4vw,56px)}
+.about-logo .arc{position:absolute;inset:0 0 auto 0;width:100%}
+.about-logo .cat{bottom:-4%}
+.about-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(32px,5vw,80px);align-items:center}
+.collage{position:relative;aspect-ratio:1/1.02}
+.ph{position:absolute;margin:0;background:#fff;border:2px solid var(--ink);padding:10px 10px 0;box-shadow:6px 6px 0 var(--ink)}
+.ph img{width:100%;height:100%;object-fit:cover;border:2px solid var(--ink);display:block}
+.ph figcaption{font-weight:900;font-stretch:125%;font-size:clamp(11px,1vw,13px);letter-spacing:.04em;text-transform:uppercase;padding:8px 2px 10px}
+.p-surf{left:4%;top:2%;width:78%;height:46%;transform:rotate(-3deg);z-index:1}
+.p-surf img{height:calc(100% - 36px);object-position:42% 55%}
+.p-sun{left:0;top:40%;width:44%;height:58%;transform:rotate(-7deg);z-index:2}
+.p-sun img{height:calc(100% - 36px);object-position:50% 30%}
+.p-board{right:2%;top:34%;width:46%;height:62%;transform:rotate(5deg);z-index:3}
+.p-board img{height:calc(100% - 36px);object-position:60% 20%}
+.tape{position:absolute;width:96px;height:28px;border:2px solid var(--ink);background:repeating-conic-gradient(var(--check) 0 25%, #fff 0 50%) 0 0/14px 14px;opacity:.95}
+.t1{top:-14px;left:44%;transform:rotate(4deg)}
+.t2{top:-12px;left:22%;transform:rotate(-12deg)}
+.t3{top:-14px;right:18%;transform:rotate(10deg)}
+.stk{position:absolute;z-index:4;image-rendering:pixelated;pointer-events:none}
+.heart1{width:44px;right:6%;top:4%}
+.heart2{width:30px;right:0;top:15%}
+.about-copy .tag{display:inline-block;font-weight:800;font-stretch:100%;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--ink);padding:3px 8px;background:var(--check)}
+.about-copy h2{font-weight:900;font-stretch:125%;font-size:clamp(48px,7vw,104px);line-height:.9;text-transform:uppercase;letter-spacing:-.02em;margin:14px 0 22px}
+.about-copy p{font-family:"Archivo",system-ui,sans-serif;font-stretch:100%;font-weight:400;font-size:17px;line-height:1.6;margin:0 0 16px;max-width:52ch}
+.about-copy p.big{font-weight:800;font-stretch:112%;font-size:clamp(20px,1.9vw,26px);line-height:1.25}
+.about-copy mark{background:var(--check);color:inherit;padding:0 4px;border-bottom:2px solid var(--ink)}
+.about-cta{display:inline-block;margin-top:10px;text-decoration:none;color:#fff;background:var(--ink);border:2px solid var(--ink);font-weight:900;font-stretch:125%;font-size:16px;text-transform:uppercase;padding:14px 22px;transition:background .15s,color .15s}
+.about-cta:hover{background:var(--check);color:var(--ink)}
+.about-sea{position:relative;height:calc(var(--s) * 20 + 30px);overflow:hidden}
+.about-sea .waves{bottom:30px}
+.about-sea::after{content:"";position:absolute;left:0;right:0;bottom:0;height:30px;background:var(--sea)}
+
+/* contacto */
+.contact{border-top:2px solid var(--ink);padding:clamp(48px,7vw,96px) clamp(16px,5vw,64px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,5vw,72px);max-width:1280px;margin:0 auto}
+.contact h2{font-weight:900;font-stretch:125%;font-size:clamp(40px,6vw,84px);line-height:.92;text-transform:uppercase;margin:0 0 20px;letter-spacing:-.02em}
+.contact .lead{font-stretch:100%;font-weight:400;font-size:17px;line-height:1.55;max-width:40ch;margin:0 0 24px}
+.contact .meta{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-stretch:100%;font-size:15px}
+.contact .meta b{display:inline-block;min-width:116px;font-weight:900;font-stretch:125%;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.contact .meta a{color:var(--ink)}
+.checkline{height:20px;margin:26px 0 0;background:repeating-conic-gradient(var(--check) 0 25%, #fff 0 50%) 0 0/20px 20px;border:2px solid var(--ink);max-width:320px}
+form.cf{border:2px solid var(--ink);padding:clamp(18px,2.6vw,30px);display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;background:#fff}
+.field{display:grid;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-weight:900;font-stretch:125%;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.field input,.field select,.field textarea{font:inherit;font-stretch:100%;font-weight:400;font-size:16px;color:var(--ink);border:2px solid var(--ink);border-radius:0;padding:11px 12px;background:#fff;width:100%;appearance:none}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 20px) 52%,calc(100% - 14px) 52%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+.field textarea{min-height:150px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;box-shadow:4px 4px 0 var(--check),4px 4px 0 2px var(--ink)}
+.field .err{font-stretch:100%;font-size:13px;color:#b0306a;min-height:0}
+.field.bad input,.field.bad textarea{border-color:#b0306a}
+.cf .send{grid-column:1/-1;font-weight:900;font-stretch:125%;font-size:17px;text-transform:uppercase;border:2px solid var(--ink);background:var(--ink);color:#fff;padding:14px;transition:background .15s,color .15s}
+.cf .send:hover{background:var(--check);color:var(--ink)}
+.cf .note{grid-column:1/-1;margin:0;font-stretch:100%;font-size:14px;line-height:1.5;padding:12px 14px;border:2px solid var(--ink);background:var(--check);display:none}
+.cf .note.show{display:block}
+
+/* chat */
+.chat-btn{position:fixed;right:clamp(14px,2.4vw,28px);bottom:clamp(14px,2.4vw,28px);z-index:60;width:68px;height:68px;border-radius:50%;border:2px solid var(--ink);background:var(--check);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);transition:transform .15s,box-shadow .15s}
+.chat-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.chat-btn img{width:36px;image-rendering:pixelated}
+.chat-btn[aria-expanded="true"] .hint{display:none}
+.chat-btn .dot{position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:#3ad16b;border:2px solid var(--ink)}
+.chat-btn .hint{position:absolute;right:calc(100% + 12px);top:50%;transform:translateY(-50%);white-space:nowrap;background:#fff;border:2px solid var(--ink);padding:6px 10px;font-weight:900;font-stretch:125%;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.chat{position:fixed;right:clamp(14px,2.4vw,28px);bottom:calc(clamp(14px,2.4vw,28px) + 84px);z-index:61;width:min(360px,calc(100vw - 28px));height:min(520px,calc(100svh - 130px));background:#fff;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);display:flex;flex-direction:column;visibility:hidden}
+.chat header{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:2px solid var(--ink);background:repeating-conic-gradient(var(--check) 0 25%, #fff 0 50%) 0 0/16px 16px}
+.chat header .av{width:42px;height:42px;border-radius:50%;border:2px solid var(--ink);background:#fff;display:grid;place-items:center;overflow:hidden}
+.chat header .av .cat.mini{position:relative;left:auto;bottom:auto;transform:none;width:90%}
+.chat header .who{background:#fff;border:2px solid var(--ink);padding:3px 8px;line-height:1.2}
+.chat header .who b{display:block;font-weight:900;font-stretch:125%;font-size:14px;text-transform:uppercase}
+.chat header .who small{font-stretch:100%;font-size:12px}
+.chat header .who small::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#3ad16b;margin-right:5px;border:1px solid var(--ink)}
+.chat header .x{margin-left:auto;width:34px;height:34px;border:2px solid var(--ink);background:#fff;font-weight:900;font-size:18px;line-height:1}
+.log{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px;font-stretch:100%;font-size:15px;line-height:1.4}
+.msg{max-width:82%;padding:8px 11px;border:2px solid var(--ink)}
+.msg.bot{align-self:flex-start;background:#fff}
+.msg.me{align-self:flex-end;background:var(--ink);color:#fff}
+.msg.typing{letter-spacing:.2em}
+.quick{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 10px}
+.quick button{border:2px solid var(--ink);background:#fff;font:inherit;font-stretch:100%;font-weight:600;font-size:13px;padding:5px 10px}
+.quick button:hover{background:var(--check)}
+.chat form{display:flex;border-top:2px solid var(--ink)}
+.chat form input{flex:1;min-width:0;border:none;font:inherit;font-stretch:100%;font-size:15px;padding:12px}
+.chat form input:focus{outline:none;background:#fff8fb}
+.chat form button{border:none;border-left:2px solid var(--ink);background:var(--ink);color:#fff;font-weight:900;font-stretch:125%;font-size:13px;text-transform:uppercase;padding:0 16px}
+.chat .demo{font-stretch:100%;font-size:11px;text-align:center;padding:4px;border-top:2px solid var(--ink);color:#555}
+
+@media (max-width:900px){ :root{--s:3px} .contact{grid-template-columns:1fr} .about-grid{grid-template-columns:1fr} .collage{max-width:620px;margin:0 auto;width:100%} .grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:560px){ :root{--s:2px;--phw:min(84vw,360px)} .ph{padding:6px 6px 0;box-shadow:4px 4px 0 var(--ink)} .ph figcaption{font-size:10px;padding:5px 0 7px} .p-surf img,.p-sun img,.p-board img{height:calc(100% - 26px)} .tape{width:64px;height:20px} form.cf{grid-template-columns:1fr} .chat-btn .hint{display:none} .grid{grid-template-columns:1fr} .tape{background-size:28px 28px;padding:14px 0} }
+</style>
+</head>
+<body>
+<nav aria-label="Main">
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div id="home">
+<main class="hero" id="top">
+  <h1 class="sr">Dame una Ola — 404: flat days not found</h1>
+  <div class="stack">
+    <div class="brand" aria-hidden="true">
+      <img class="arc" src="a/dame-una-ola-logo.svg" alt="">
+      <div class="cat">
+        <img class="head" src="a/cat-head_ok.svg" alt="">
+        <img class="sp sl" src="a/eye-screen-left_ok.svg" alt="">
+        <img class="sp sr2" src="a/eye-screen-right_ok.svg" alt="">
+        <img class="star" src="a/third-eye-star.svg" alt="">
+      </div>
+    </div>
+    <img class="phone" src="a/nokia.webp" alt="Pink Nokia phone. The screen reads: 404: flat days not found." draggable="false">
+  </div>
+  <div class="waves" id="waves" aria-hidden="true"></div>
+</main>
+
+<div class="tape" aria-label="Pre-order now open">
+  <div class="tape-track" aria-hidden="true"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Pre-order</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Pre-order</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Pre-order</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Pre-order</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Pre-order</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Pre-order</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Pre-order</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 0C21.5 13 27 18.5 40 20C27 21.5 21.5 27 20 40C18.5 27 13 21.5 0 20C13 18.5 18.5 13 20 0Z" fill="#111"/></svg><span>Pre-order</span></div>
+</div>
+
+<section class="products" id="shop" aria-labelledby="shopT">
+  <h2 id="shopT">Barrel Lover</h2>
+  <div class="grid">
+    <article class="card">
+      <figure><img src="a/sweatshirt.webp" alt="Model wearing a purple tie-dye sweatshirt with a heart in the middle" loading="lazy"></figure>
+      <div class="body">
+        <span class="tag">Pre-order</span>
+        <h3>Tie Dye Heart Sweatshirt</h3>
+        <p>Oversized fit. Purple tie-dye. A heart in the middle. Day or night, indoors or out. Wear it wherever, whenever.</p>
+        <a class="btn" data-product="sweatshirt" href="#contact">Pre-order</a>
+      </div>
+    </article>
+    <article class="card">
+      <figure><img src="a/poncho.webp" alt="Model wearing a long pink and black tie-dye hooded surf poncho" loading="lazy"></figure>
+      <div class="body">
+        <span class="tag">Pre-order</span>
+        <h3>Pink Chaos Surf Poncho</h3>
+        <p>Oversized fit. Pink and black tie-dye. Hood up, wetsuit off. Why bother picking an outfit when you've got a uniform?</p>
+        <a class="btn" data-product="poncho" href="#contact">Pre-order</a>
+      </div>
+    </article>
+    <article class="card">
+      <figure><img src="a/tee.webp" alt="Model wearing an oversized purple, mint and aqua tie-dye tee" loading="lazy"></figure>
+      <div class="body">
+        <span class="tag">Pre-order</span>
+        <h3>Pastel Chaos Tie Dye Tee</h3>
+        <p>Oversized fit. Purple, mint and aqua tie-dye. Buy it for your boyfriend. Wear it yourself.</p>
+        <a class="btn" data-product="tee" href="#contact">Pre-order</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="contact" id="contact" aria-labelledby="contactT">
+  <div>
+    <h2 id="contactT">Contact</h2>
+    <p class="lead">Questions about your pre-order, sizing, shipping or a collab? Send us a message and we'll paddle back to you.</p>
+    <ul class="meta">
+      <li><b>Instagram</b><a href="https://instagram.com/dameunaola">@dameunaola</a></li>
+      <li><b>Replies</b>Usually within 48 hours</li>
+      <li><b>Live chat</b>Bottom right corner</li>
+    </ul>
+    <div class="checkline" aria-hidden="true"></div>
+  </div>
+
+  <form class="cf" id="cf" novalidate>
+    <div class="field"><label for="cfName">Name</label><input id="cfName" name="name" autocomplete="name" required><span class="err" id="eName"></span></div>
+    <div class="field"><label for="cfEmail">Email</label><input id="cfEmail" name="email" type="email" autocomplete="email" required><span class="err" id="eEmail"></span></div>
+    <div class="field full"><label for="cfTopic">Topic</label>
+      <select id="cfTopic" name="topic">
+        <option>Pre-order</option><option>Sizing &amp; fit</option><option>Shipping &amp; returns</option><option>Collabs &amp; press</option><option>Something else</option>
+      </select></div>
+    <div class="field full"><label for="cfMsg">Message</label><textarea id="cfMsg" name="message" required></textarea><span class="err" id="eMsg"></span></div>
+    <input type="checkbox" name="botcheck" class="sr" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="send" type="submit">Send message</button>
+    <p class="note" id="cfNote" role="status"></p>
+  </form>
+</section>
+
+</div>
+
+<div id="aboutView" hidden>
+<section class="about" aria-labelledby="aboutT">
+  <a class="about-logo" href="#top" aria-label="Dame una Ola, home">
+    <img class="arc" src="a/dame-una-ola-logo.svg" alt="">
+    <span class="cat" aria-hidden="true"><img class="head" src="a/cat-head_ok.svg" alt=""><img class="sp sl" src="a/eye-screen-left_ok.svg" alt=""><img class="sp sr2" src="a/eye-screen-right_ok.svg" alt=""><img class="star" src="a/third-eye-star.svg" alt=""></span>
+  </a>
+
+  <div class="about-grid">
+    <div class="collage" aria-label="Photos of Julia, founder of Dame una Ola">
+      <figure class="ph p-surf"><img src="a/julia-2.webp" alt="Julia surfing a barrel in a pink swimsuit"><figcaption>Chasing the barrel</figcaption><i class="tape t1"></i></figure>
+      <figure class="ph p-sun"><img src="a/julia-1.webp" alt="Julia with pink hair shading her eyes from the sun"><figcaption>Sun's out</figcaption><i class="tape t2"></i></figure>
+      <figure class="ph p-board"><img src="a/julia-3.webp" alt="Julia smiling next to her surfboard after a session"><figcaption>Post-session</figcaption><i class="tape t3"></i></figure>
+      <img class="stk heart1" src="a/heart.png" alt="" aria-hidden="true">
+      <img class="stk heart2" src="a/heart.png" alt="" aria-hidden="true">
+    </div>
+
+    <div class="about-copy">
+      <span class="tag">The founder</span>
+      <h2 id="aboutT">About</h2>
+      <p class="big">Julia is a brand identity and fashion designer, but above all, she loves surfing.</p>
+      <p>That's why she created Dame una Ola, a brand born out of her endless obsession with catching waves.</p>
+      <p>Even though she considers herself a <mark>pretty mediocre surfer</mark>, her entire life revolves around chasing the best waves and spending as much time in the ocean as possible.</p>
+      <p>Dame una Ola is a reflection of that love for the ocean, made to follow you wherever your search for the perfect barrel takes you.</p>
+      <a class="about-cta" href="#shop">Shop Barrel Lover</a>
+    </div>
+  </div>
+</section>
+<div class="about-sea" aria-hidden="true"><div class="waves"></div></div>
+</div>
+
+<button class="chat-btn" id="chatBtn" type="button" aria-expanded="false" aria-controls="chat" aria-label="Open live chat">
+  <img src="a/chat.png" alt=""><span class="dot" aria-hidden="true"></span><span class="hint" aria-hidden="true">Chat with us</span>
+</button>
+
+<div class="chat" id="chat" role="dialog" aria-label="Live chat with Dame una Ola">
+  <header>
+    <span class="av"><span class="cat mini" aria-hidden="true"><img class="head" src="a/cat-head_ok.svg" alt=""><img class="sp sl" src="a/eye-screen-left_ok.svg" alt=""><img class="sp sr2" src="a/eye-screen-right_ok.svg" alt=""><img class="star" src="a/third-eye-star.svg" alt=""></span></span>
+    <span class="who"><b>Dame una Ola</b><small>Online now</small></span>
+    <button class="x" id="chatClose" type="button" aria-label="Close chat">×</button>
+  </header>
+  <div class="log" id="log" aria-live="polite"></div>
+  <div class="quick" id="quick">
+    <button type="button">When does my pre-order ship?</button>
+    <button type="button">Help me with sizing</button>
+    <button type="button">Talk to a human</button>
+  </div>
+  <form id="chatForm"><input id="chatIn" aria-label="Type a message" placeholder="Type a message…" autocomplete="off"><button type="submit">Send</button></form>
+  <div class="demo">Demo chat: replies are automatic for now</div>
+</div>
+
+<script>
+/* ================== CONFIGURACIÓN — pegá tus claves acá ================== */
+window.DUO_CONFIG = {
+  // Web3Forms: la "Access Key" que te llega por mail (es pública, no es secreta)
+  web3formsKey: "",
+  // Crisp: Settings → Website Settings → Setup instructions → "Website ID"
+  crispWebsiteId: "",
+  // Stripe: un Payment Link por producto (empiezan con https://buy.stripe.com/...)
+  stripeLinks: {
+    sweatshirt: "",
+    poncho: "",
+    tee: ""
+  }
+};
+/* ========================================================================== */
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ojos espiral: giro continuo */
+gsap.to('.cat .sp', {rotation:360, transformOrigin:'50% 50%', duration:3.2, ease:'none', repeat:-1, paused:reduce});
+
+/* estrella del tercer ojo: crece y se achica */
+gsap.fromTo('.cat .star', {scale:.75}, {scale:1.35, transformOrigin:'50% 55%', duration:.9, ease:'sine.inOut', yoyo:true, repeat:-1, paused:reduce});
+
+/* olas: avanzan de a un píxel, como en una consola vieja */
+const waves = document.querySelectorAll('.waves');
+const S = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--s')) || 5;
+let x = 0, last = 0;
+function tick(t){
+  if (t - last > 70) {
+    last = t;
+    x = (x + S()) % (S() * 24);
+    waves.forEach(w => w.style.backgroundPositionX = x + 'px');
+  }
+  requestAnimationFrame(tick);
+}
+if (!reduce) requestAnimationFrame(tick);
+if (reduce) document.querySelector('.tape-track').style.animation='none';
+
+/* rutas: #about muestra la página About, lo demás la home */
+const home=document.getElementById('home'), aboutV=document.getElementById('aboutView');
+function route(){
+  const h=location.hash.slice(1);
+  const isAbout = h==='about';
+  home.hidden=isAbout; aboutV.hidden=!isAbout;
+  document.querySelectorAll('nav a').forEach(a=>a.toggleAttribute('aria-current', a.getAttribute('href')==='#'+h));
+  if(isAbout){ scrollTo(0,0); if(!reduce) gsap.from('.ph',{y:40,rotation:0,opacity:0,duration:.6,stagger:.12,ease:'back.out(1.6)',clearProps:'opacity,y'}); }
+  else if(h && document.getElementById(h)) document.getElementById(h).scrollIntoView({behavior: reduce?'auto':'smooth'});
+  else scrollTo(0,0);
+}
+addEventListener('hashchange',route); route();
+
+
+/* formulario de contacto */
+const cf=document.getElementById('cf'), note=document.getElementById('cfNote');
+const rules=[['cfName','eName',v=>v.trim().length>1,'Tell us your name.'],['cfEmail','eEmail',v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v),'Enter an email like you@mail.com.'],['cfMsg','eMsg',v=>v.trim().length>4,'Write a short message.']];
+cf.addEventListener('submit',e=>{
+  e.preventDefault(); let ok=true;
+  rules.forEach(([id,eid,test,txt])=>{ const el=document.getElementById(id), f=el.closest('.field'), good=test(el.value); f.classList.toggle('bad',!good); document.getElementById(eid).textContent=good?'':txt; if(!good&&ok){el.focus();ok=false;} });
+  if(!ok) return;
+  const name=document.getElementById('cfName').value.trim().split(' ')[0];
+  const send=cf.querySelector('.send'), key=(window.DUO_CONFIG||{}).web3formsKey;
+  if(!key){ note.textContent=`Thanks, ${name}! The form isn't connected yet (missing Web3Forms key), so nothing was sent.`; note.classList.add('show'); return; }
+  const data=Object.fromEntries(new FormData(cf));
+  if(data.botcheck) return;
+  delete data.botcheck;
+  Object.assign(data,{access_key:key, subject:`Dame una Ola — ${data.topic} — ${data.name}`, from_name:'Dame una Ola website', replyto:data.email});
+  send.disabled=true; send.textContent='Sending…'; note.classList.remove('show');
+  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)})
+    .then(r=>r.json()).then(j=>{
+      if(j.success){ note.textContent=`Thanks, ${name}! Your message was sent. We'll paddle back to you soon.`; cf.reset(); send.textContent='Sent'; }
+      else throw new Error(j.message||'error');
+    }).catch(()=>{ note.textContent='Something went wrong and your message wasn\'t sent. Please try again, or DM us on Instagram @dameunaola.'; send.disabled=false; send.textContent='Send message'; })
+    .finally(()=>note.classList.add('show'));
+});
+
+/* pagos: cada botón abre su Payment Link de Stripe si está configurado */
+document.querySelectorAll('.btn[data-product]').forEach(a=>{
+  const link=((window.DUO_CONFIG||{}).stripeLinks||{})[a.dataset.product];
+  if(link){ a.href=link; a.rel='noopener'; }
+  else a.addEventListener('click',()=>{ const t=document.getElementById('cfTopic'); if(t) t.value='Pre-order'; });
+});
+
+/* chat en vivo (demo) */
+const chat=document.getElementById('chat'), btn=document.getElementById('chatBtn'), log=document.getElementById('log'), inp=document.getElementById('chatIn');
+let open=false, greeted=false;
+function add(text,who){ const d=document.createElement('div'); d.className='msg '+who; d.textContent=text; log.appendChild(d); log.scrollTop=log.scrollHeight; return d; }
+const answers=[
+  [/ship|when|pre-?order|order/i,"Pre-orders ship in waves (pun intended). We'll email your tracking number as soon as your piece leaves the studio."],
+  [/size|sizing|fit/i,"Everything in Barrel Lover is oversized. If you like it relaxed, take your usual size. If you want it fitted, go one size down."],
+  [/human|person|real/i,"Sure thing. Leave your question in the contact form below and someone from the crew will reply within 48 hours."],
+  [/hi|hello|hey|hola/i,"Hey! What can we help you with?"]
+];
+function reply(q){
+  const t=add('• • •','bot typing');
+  setTimeout(()=>{ t.classList.remove('typing'); const a=answers.find(([r])=>r.test(q)); t.textContent=a?a[1]:"Good question! For anything specific, use the contact form below and we'll get back to you."; log.scrollTop=log.scrollHeight; }, reduce?0:900);
+}
+function toggle(force){
+  open = force ?? !open; btn.setAttribute('aria-expanded',open); btn.setAttribute('aria-label',open?'Close live chat':'Open live chat');
+  if(open){
+    gsap.fromTo(chat,{autoAlpha:0,y:20,scale:.96},{autoAlpha:1,y:0,scale:1,duration:reduce?0:.3,ease:'back.out(2)',transformOrigin:'100% 100%'});
+    if(!greeted){ greeted=true; add("Hey! 🌊 Welcome to Dame una Ola. Ask us anything about the drop.".replace(' 🌊',''),'bot'); }
+    setTimeout(()=>inp.focus(),50);
+  } else { gsap.to(chat,{autoAlpha:0,y:20,duration:reduce?0:.2}); btn.focus(); }
+}
+const crispId=(window.DUO_CONFIG||{}).crispWebsiteId;
+if(crispId){
+  window.$crisp=[]; window.CRISP_WEBSITE_ID=crispId;
+  $crisp.push(['do','chat:hide']);                          // ocultamos su burbuja, usamos la nuestra
+  $crisp.push(['on','chat:closed',()=>{ $crisp.push(['do','chat:hide']); btn.setAttribute('aria-expanded','false'); }]);
+  const sc=document.createElement('script'); sc.src='https://client.crisp.chat/l.js'; sc.async=true; document.head.appendChild(sc);
+  document.querySelector('#chat .demo').textContent='';
+  btn.addEventListener('click',()=>{ $crisp.push(['do','chat:show']); $crisp.push(['do','chat:open']); btn.setAttribute('aria-expanded','true'); });
+} else btn.addEventListener('click',()=>toggle());
+document.getElementById('chatClose').addEventListener('click',()=>toggle(false));
+addEventListener('keydown',e=>{ if(e.key==='Escape'&&open) toggle(false); });
+document.getElementById('quick').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; add(b.textContent,'me'); reply(b.textContent); });
+document.getElementById('chatForm').addEventListener('submit',e=>{ e.preventDefault(); const v=inp.value.trim(); if(!v) return; add(v,'me'); inp.value=''; reply(v); });
+if(!reduce) gsap.fromTo('.chat-btn',{scale:0},{scale:1,duration:.5,delay:.8,ease:'back.out(2.5)'});
+
+})();
+</script>
+</body>
+</html>
