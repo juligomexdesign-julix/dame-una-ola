@@ -175,11 +175,30 @@ form.cf{border:2px solid var(--ink);padding:clamp(18px,2.6vw,30px);display:grid;
 
 @media (max-width:900px){ :root{--s:3px} .contact{grid-template-columns:1fr} .about-grid{grid-template-columns:1fr} .collage{max-width:620px;margin:0 auto;width:100%} .grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 @media (max-width:560px){ :root{--s:2px;--phw:min(84vw,360px)} .ph{padding:6px 6px 0;box-shadow:4px 4px 0 var(--ink)} .ph figcaption{font-size:10px;padding:5px 0 7px} .p-surf img,.p-sun img,.p-board img{height:calc(100% - 26px)} .ptape{width:64px;height:20px} form.cf{grid-template-columns:1fr} .chat-btn .hint{display:none} .grid{grid-template-columns:1fr} .tape{background-size:14px 14px;padding:7px 0} }
+
+.burger{display:none}
+@media (max-width:560px){
+  nav{display:flex;justify-content:flex-end;padding:16px 16px 0}
+  .burger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:46px;height:46px;padding:0 11px;background:#fff;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);cursor:pointer;position:relative;z-index:101}
+  .burger span{display:block;height:3px;background:var(--ink);transition:transform .2s,opacity .2s}
+  .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  .burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+  nav ul{position:fixed;inset:0;z-index:100;flex-direction:column;justify-content:center;align-items:center;gap:26px;background:#fff;opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+  nav ul:before,nav ul:after{content:"";position:absolute;left:0;right:0;height:28px;background:repeating-conic-gradient(var(--check) 0 25%,#fff 0 50%) 0 0/14px 14px}
+  nav ul:before{top:0;border-bottom:2px solid var(--ink)}
+  nav ul:after{bottom:0;border-top:2px solid var(--ink)}
+  nav.open ul{opacity:1;visibility:visible}
+  nav ul a{font-size:34px}
+  body.menu-open{overflow:hidden}
+  body.menu-open .chat-btn,body.menu-open .chat{display:none}
+}
 </style>
 </head>
 <body>
 <nav aria-label="Main">
-  <ul>
+  <button class="burger" type="button" aria-expanded="false" aria-controls="mainMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
+  <ul id="mainMenu">
     <li><a href="#about">About</a></li>
     <li><a href="#shop">Shop</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -469,6 +488,13 @@ document.getElementById('chatForm').addEventListener('submit',e=>{ e.preventDefa
 if(!reduce) gsap.fromTo('.chat-btn',{scale:0},{scale:1,duration:.5,delay:.8,ease:'back.out(2.5)'});
 
 })();
+</script>
+<script>
+(()=>{const nav=document.querySelector('nav[aria-label="Main"]');if(!nav)return;const b=nav.querySelector('.burger');
+const set=o=>{nav.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Close menu':'Open menu');document.body.classList.toggle('menu-open',o)};
+b.addEventListener('click',()=>set(!nav.classList.contains('open')));
+nav.querySelectorAll('ul a').forEach(a=>a.addEventListener('click',()=>set(false)));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});})();
 </script>
 </body>
 </html>

@@ -69,10 +69,28 @@ input[type=email]{flex:1 1 260px;border:2px solid var(--ink);padding:13px 14px;f
 .top{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
 .waves{height:calc(var(--s) * 20);background:url("/a/wave-tile.png") 0 0 / calc(var(--s) * 24) calc(var(--s) * 20) repeat-x;image-rendering:pixelated}
 @media (max-width:560px){ :root{--s:2px} }
+
+.burger{display:none}
+@media (max-width:560px){
+  nav{display:flex;justify-content:flex-end;padding:16px 16px 0}
+  .burger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:46px;height:46px;padding:0 11px;background:#fff;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);cursor:pointer;position:relative;z-index:101}
+  .burger span{display:block;height:3px;background:var(--ink);transition:transform .2s,opacity .2s}
+  .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  .burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+  nav ul{position:fixed;inset:0;z-index:100;flex-direction:column;justify-content:center;align-items:center;gap:26px;background:#fff;opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+  nav ul:before,nav ul:after{content:"";position:absolute;left:0;right:0;height:28px;background:repeating-conic-gradient(var(--check) 0 25%,#fff 0 50%) 0 0/14px 14px}
+  nav ul:before{top:0;border-bottom:2px solid var(--ink)}
+  nav ul:after{bottom:0;border-top:2px solid var(--ink)}
+  nav.open ul{opacity:1;visibility:visible}
+  nav ul a{font-size:34px}
+  body.menu-open{overflow:hidden}
+  body.menu-open .chat-btn,body.menu-open .chat{display:none}
+}
 </style>
 </head>
 <body>
-<nav aria-label="Main"><ul>
+<nav aria-label="Main"><button class="burger" type="button" aria-expanded="false" aria-controls="mainMenu" aria-label="Open menu"><span></span><span></span><span></span></button><ul id="mainMenu">
   <li><a href="/#about">About</a></li><li><a href="/#shop">Shop</a></li><li><a href="/#contact">Contact</a></li><li><a href="/account" aria-current="page">Account</a></li>
 </ul></nav>
 <a class="logo" href="/" aria-label="Dame una Ola, home"><img class="arc" src="/a/dame-una-ola-logo.svg" alt=""><span class="cat" aria-hidden="true"><img class="head" src="/a/cat-head_ok.svg" alt=""><img class="sp sl" src="/a/eye-screen-left_ok.svg" alt=""><img class="sp sr2" src="/a/eye-screen-right_ok.svg" alt=""><img class="star" src="/a/third-eye-star.svg" alt=""></span></a>
@@ -149,6 +167,13 @@ $("#loginForm").addEventListener("submit", async (e) => {
 $("#logout").addEventListener("click", async () => { await fetch("/api/account/logout", { method: "POST" }); location.href = "/account"; });
 load();
 })();
+</script>
+<script>
+(()=>{const nav=document.querySelector('nav[aria-label="Main"]');if(!nav)return;const b=nav.querySelector('.burger');
+const set=o=>{nav.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Close menu':'Open menu');document.body.classList.toggle('menu-open',o)};
+b.addEventListener('click',()=>set(!nav.classList.contains('open')));
+nav.querySelectorAll('ul a').forEach(a=>a.addEventListener('click',()=>set(false)));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});})();
 </script>
 </body>
 </html>
