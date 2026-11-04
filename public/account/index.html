@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My orders — Dame una Ola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Cuenta del cliente: misma piel que la tienda */
+  --paper:#fff; --ink:#111; --muted:#555; --check:#F6C6DE; --sea:#47C2EC; --s:3.5px;
+  --display:"Archivo","Arial Black",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html,body,a,button{cursor:url("/a/cursor.png") 1 1, default}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-stretch:100%;min-height:100vh;display:flex;flex-direction:column}
+:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+h1,h2,h3{margin:0;font-weight:900;font-stretch:125%;text-transform:uppercase;letter-spacing:-.01em;line-height:.95}
+nav{padding:clamp(24px,4vw,44px) 16px 0}
+nav ul{display:flex;justify-content:center;gap:clamp(18px,4vw,48px);list-style:none;margin:0;padding:0;flex-wrap:wrap}
+nav a{font-weight:900;font-stretch:125%;font-size:clamp(16px,2.2vw,30px);text-transform:uppercase;color:var(--ink);text-decoration:none}
+nav a[aria-current]{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:8px}
+.logo{display:block;width:clamp(150px,16vw,210px);margin:28px auto 0}
+.logo img{width:100%}
+main{flex:1;width:min(860px,100% - 32px);margin:clamp(28px,5vw,56px) auto 80px}
+.tape{border-block:2px solid var(--ink);background:repeating-conic-gradient(var(--check) 0 25%,#fff 0 50%) 0 0/20px 20px;padding:8px 0;margin:0 0 32px}
+.tape span{display:block;text-align:center;font-weight:900;font-stretch:125%;font-size:clamp(14px,2vw,22px);text-transform:uppercase}
+.card{border:2px solid var(--ink);padding:clamp(20px,3vw,32px);background:#fff}
+h1{font-size:clamp(38px,6vw,72px);margin-bottom:14px}
+p.lead{font-size:17px;line-height:1.55;max-width:52ch;margin:0 0 22px}
+form{display:flex;gap:10px;flex-wrap:wrap}
+label.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+input[type=email]{flex:1 1 260px;border:2px solid var(--ink);padding:13px 14px;font:inherit;font-size:16px;border-radius:0}
+.btn{border:2px solid var(--ink);background:var(--ink);color:#fff;font:inherit;font-weight:900;font-stretch:125%;font-size:15px;text-transform:uppercase;padding:13px 20px}
+.btn:hover{background:var(--check);color:var(--ink)}
+.btn.ghost{background:#fff;color:var(--ink)}
+.msg{margin:16px 0 0;padding:12px 14px;border:2px solid var(--ink);background:var(--check);font-size:15px;line-height:1.5}
+.msg.err{background:#fde6ef}
+.orders{display:grid;gap:16px;margin-top:22px}
+.order{border:2px solid var(--ink)}
+.order header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:2px solid var(--ink)}
+.order header b{font-weight:900;font-stretch:125%;text-transform:uppercase}
+.order header small{color:var(--muted)}
+.order .body{padding:14px 16px;display:grid;gap:8px}
+.line{display:flex;justify-content:space-between;gap:10px;font-size:15px}
+.line.total{font-weight:900;border-top:1px solid #ddd;padding-top:8px}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;border:2px solid var(--ink);text-transform:uppercase;letter-spacing:.04em}
+.pill.paid{background:#fff1d6}.pill.shipped{background:#e3efff}.pill.delivered{background:#dff5e7}.pill.cancelled,.pill.refunded{background:#eee}
+.track{font-size:14px;border-top:1px solid #ddd;padding-top:8px}
+.track a{color:var(--ink);font-weight:800}
+.steps{display:flex;gap:6px;margin:4px 0 2px}
+.steps i{flex:1;height:8px;border:2px solid var(--ink);background:#fff}
+.steps i.on{background:var(--sea)}
+.empty{border:2px dashed var(--ink);padding:24px;text-align:center}
+.empty a{color:var(--ink);font-weight:800}
+.top{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+.waves{height:calc(var(--s) * 20);background:url("/a/wave-tile.png") 0 0 / calc(var(--s) * 24) calc(var(--s) * 20) repeat-x;image-rendering:pixelated}
+@media (max-width:560px){ :root{--s:2px} }
+</style>
+</head>
+<body>
+<nav aria-label="Main"><ul>
+  <li><a href="/#about">About</a></li><li><a href="/#shop">Shop</a></li><li><a href="/#contact">Contact</a></li><li><a href="/account" aria-current="page">Account</a></li>
+</ul></nav>
+<a class="logo" href="/" aria-label="Dame una Ola, home"><img src="/a/dame-una-ola-logo.svg" alt=""></a>
+
+<main>
+  <div class="tape" aria-hidden="true"><span>✦ My orders ✦</span></div>
+
+  <section class="card" id="login" hidden>
+    <h1>Your orders</h1>
+    <p class="lead">Enter the email you used for your pre-order. We'll send you a one-time link to see your orders. No password needed.</p>
+    <form id="loginForm" novalidate>
+      <label class="sr" for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@email.com" required>
+      <button class="btn" type="submit">Send me the link</button>
+    </form>
+    <div id="loginMsg"></div>
+  </section>
+
+  <section id="orders" hidden>
+    <div class="top"><div><h1>Your orders</h1><p class="lead" id="hello" style="margin:0"></p></div>
+      <button class="btn ghost" id="logout" type="button">Log out</button></div>
+    <div id="thanks"></div>
+    <div class="orders" id="list"></div>
+  </section>
+</main>
+<div class="waves" aria-hidden="true"></div>
+
+<script>
+(() => {
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (c, cur = "usd") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur.toUpperCase() }).format((c || 0) / 100);
+const date = (s) => s ? new Date(s).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "";
+const LABEL = { paid: "Confirmed", shipped: "On its way", delivered: "Delivered", cancelled: "Cancelled", refunded: "Refunded" };
+const STEP = { paid: 1, shipped: 2, delivered: 3 };
+const params = new URLSearchParams(location.search);
+
+async function load() {
+  const r = await fetch("/api/account/me", { credentials: "same-origin" }).then((r) => r.json()).catch(() => ({ email: null }));
+  if (!r.email) {
+    $("#login").hidden = false; $("#orders").hidden = true;
+    if (params.get("checkout") === "success") $("#loginMsg").innerHTML = `<p class="msg"><b>Thanks for your pre-order!</b> Check your inbox for the confirmation email. To see your order here, enter the same email below.</p>`;
+    if (params.get("login") === "expired") $("#loginMsg").innerHTML = `<p class="msg err">That link expired or was already used. Enter your email to get a new one.</p>`;
+    return;
+  }
+  $("#login").hidden = true; $("#orders").hidden = false;
+  $("#hello").textContent = `Logged in as ${r.email}`;
+  if (params.get("checkout") === "success") $("#thanks").innerHTML = `<p class="msg"><b>Thanks for your pre-order!</b> It can take a minute to show up below.</p>`;
+  $("#list").innerHTML = r.orders.length ? r.orders.map((o) => `
+    <article class="order">
+      <header><div><b>${esc(o.number)}</b><br><small>${date(o.created_at)}</small></div><span class="pill ${o.status}">${LABEL[o.status] || o.status}</span></header>
+      <div class="body">
+        ${STEP[o.status] ? `<div class="steps" aria-label="Progress: ${LABEL[o.status]}">${[1,2,3].map((n) => `<i class="${n <= STEP[o.status] ? "on" : ""}"></i>`).join("")}</div>` : ""}
+        ${o.items.map((i) => `<div class="line"><span>${i.qty} × ${esc(i.name)} <small style="color:var(--muted)">${esc(i.size)}</small></span><span>${money(i.price_cents * i.qty, o.currency)}</span></div>`).join("")}
+        <div class="line total"><span>Total</span><span>${money(o.total_cents, o.currency)}</span></div>
+        ${o.status === "paid" && o.items[0]?.ship_date ? `<div class="track">Pre-order · ships ${esc(o.items[0].ship_date)}</div>` : ""}
+        ${o.tracking ? `<div class="track">Shipped ${date(o.shipped_at)} with ${esc(o.carrier || "carrier")} · <b>${esc(o.tracking)}</b>${o.tracking_url ? ` · <a href="${esc(o.tracking_url)}" target="_blank" rel="noopener">Track package</a>` : ""}</div>` : ""}
+      </div>
+    </article>`).join("") : `<div class="empty">No orders yet. <a href="/#shop">See the drop</a></div>`;
+}
+
+$("#loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = $("#email").value.trim(), box = $("#loginMsg");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { box.innerHTML = `<p class="msg err">Enter an email like you@email.com.</p>`; return; }
+  const btn = e.submitter; btn.disabled = true; btn.textContent = "Sending…";
+  try {
+    const r = await fetch("/api/account/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email }) });
+    if (!r.ok) throw new Error((await r.json()).error);
+    box.innerHTML = `<p class="msg"><b>Check your inbox.</b> If there are orders with ${esc(email)}, the link will be there in a minute. It expires in 30 minutes.</p>`;
+  } catch (err) { box.innerHTML = `<p class="msg err">${esc(err.message || "Something went wrong. Try again.")}</p>`; }
+  btn.disabled = false; btn.textContent = "Send me the link";
+});
+$("#logout").addEventListener("click", async () => { await fetch("/api/account/logout", { method: "POST" }); location.href = "/account"; });
+load();
+})();
+</script>
+</body>
+</html>

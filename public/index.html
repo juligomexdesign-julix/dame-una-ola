@@ -30,8 +30,8 @@ img{display:block;max-width:100%}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 nav{padding:clamp(24px,4vw,44px) 16px 0;position:relative;z-index:5}
-nav ul{display:flex;justify-content:center;gap:clamp(22px,4.4vw,54px);list-style:none;margin:0;padding:0}
-nav a{font-weight:900;font-stretch:125%;font-size:clamp(18px,2.6vw,36px);letter-spacing:-.01em;text-transform:uppercase;color:var(--ink);text-decoration:none;display:inline-block;transition:transform .15s}
+nav ul{display:flex;justify-content:center;gap:clamp(16px,3.6vw,48px);list-style:none;margin:0;padding:0;flex-wrap:wrap}
+nav a{font-weight:900;font-stretch:125%;font-size:clamp(16px,2.3vw,32px);letter-spacing:-.01em;text-transform:uppercase;color:var(--ink);text-decoration:none;display:inline-block;transition:transform .15s}
 nav a[aria-current]{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:8px}
 nav a:hover{transform:translateY(-3px);color:#d86fa0}
 
@@ -72,6 +72,12 @@ nav a:hover{transform:translateY(-3px);color:#d86fa0}
 .card figure img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;transition:transform .5s ease}
 .card:hover figure img{transform:scale(1.04)}
 .card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card .meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;border-top:2px solid var(--ink);padding-top:10px}
+.card .price{font-weight:900;font-stretch:125%;font-size:20px}
+.card .size{font-stretch:100%;font-size:13px;color:#444}
+.card .ships{font-stretch:100%;font-size:13px;font-weight:700}
+.card .btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.card .buymsg{flex:0;margin:0;font-size:14px;font-weight:700;border:2px solid var(--ink);background:var(--check);padding:8px 10px}
 .card .tag{align-self:flex-start;font-weight:800;font-stretch:100%;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--ink);padding:3px 8px;background:var(--check)}
 .card h3{margin:0;font-weight:900;font-stretch:115%;font-size:clamp(18px,1.6vw,22px);line-height:1.1;text-transform:uppercase;text-wrap:balance}
 .card p{margin:0;font-family:"Archivo",system-ui,sans-serif;font-stretch:100%;font-weight:400;font-size:15px;line-height:1.5;color:#2b2b2b;flex:1}
@@ -177,6 +183,7 @@ form.cf{border:2px solid var(--ink);padding:clamp(18px,2.6vw,30px);display:grid;
     <li><a href="#about">About</a></li>
     <li><a href="#shop">Shop</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="/account">Account</a></li>
   </ul>
 </nav>
 
@@ -320,12 +327,7 @@ window.DUO_CONFIG = {
   web3formsKey: "996ebe7b-b290-46e0-a7df-7029fac2462d",
   // Crisp: Settings → Website Settings → Setup instructions → "Website ID"
   crispWebsiteId: "b3afa286-df54-46e2-9105-84d47ae9264e",
-  // Stripe: un Payment Link por producto (empiezan con https://buy.stripe.com/...)
-  stripeLinks: {
-    sweatshirt: "",
-    poncho: "",
-    tee: ""
-  }
+  // Los productos, precios, stock y pagos ahora se manejan desde el panel /admin
 };
 /* ========================================================================== */
 </script>
@@ -392,12 +394,42 @@ cf.addEventListener('submit',e=>{
     .finally(()=>note.classList.add('show'));
 });
 
-/* pagos: cada botón abre su Payment Link de Stripe si está configurado */
-document.querySelectorAll('.btn[data-product]').forEach(a=>{
-  const link=((window.DUO_CONFIG||{}).stripeLinks||{})[a.dataset.product];
-  if(link){ a.href=link; a.rel='noopener'; }
-  else a.addEventListener('click',()=>{ const t=document.getElementById('cfTopic'); if(t) t.value='Pre-order'; });
-});
+/* tienda: productos desde la base de datos + checkout */
+const grid=document.querySelector('.products .grid');
+const escH=(v)=>String(v??'').replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const usd=(c)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format((c||0)/100);
+function bindBuy(){
+  grid.querySelectorAll('.btn[data-id]').forEach(a=>a.addEventListener('click',async(e)=>{
+    e.preventDefault(); if(a.getAttribute('aria-disabled')==='true') return;
+    const card=a.closest('.card'), msg=card.querySelector('.buymsg'), label=a.textContent;
+    a.textContent='One sec…';
+    try{
+      const r=await fetch('/api/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({product_id:+a.dataset.id})});
+      const d=await r.json();
+      if(r.ok&&d.url){ location.href=d.url; return; }
+      msg.textContent=d.error||'Something went wrong. Try again.'; msg.hidden=false;
+    }catch(err){ msg.textContent='Something went wrong. Try again.'; msg.hidden=false; }
+    a.textContent=label;
+  }));
+}
+fetch('/api/products').then(r=>r.ok?r.json():Promise.reject()).then(({products})=>{
+  if(!products||!products.length) return;
+  grid.innerHTML=products.map(p=>{
+    const soldOut=p.stock<=0;
+    return `<article class="card">
+      <figure>${p.image_url?`<img src="${escH(p.image_url)}" alt="${escH(p.image_alt||p.name)}" loading="lazy">`:''}</figure>
+      <div class="body">
+        <span class="tag">${soldOut?'Sold out':'Pre-order'}</span>
+        <h3>${escH(p.name)}</h3>
+        <p>${escH(p.description)}</p>
+        <div class="meta"><span class="price">${usd(p.price_cents)}</span><span class="size">${escH(p.size_label)}</span></div>
+        ${p.ship_date?`<div class="ships">Ships ${escH(p.ship_date)}</div>`:''}
+        <a class="btn" data-id="${p.id}" href="#shop" ${soldOut?'aria-disabled="true"':''}>${soldOut?'Sold out':'Pre-order'}</a>
+        <p class="buymsg" role="status" hidden></p>
+      </div>
+    </article>`}).join('');
+  bindBuy();
+}).catch(()=>{ /* si la API no responde quedan las cards fijas */ });
 
 /* chat en vivo (demo) */
 const chat=document.getElementById('chat'), btn=document.getElementById('chatBtn'), log=document.getElementById('log'), inp=document.getElementById('chatIn');

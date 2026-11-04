@@ -1,8 +1,27 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "dameunaola",
+  "main": "src/worker.js",
   "compatibility_date": "2026-11-01",
   "assets": {
-    "directory": "./public"
-  }
+    "directory": "./public",
+    "binding": "ASSETS",
+    // estas rutas pasan primero por el Worker (API, panel protegido y login de clientes)
+    "run_worker_first": ["/api/*", "/admin", "/admin/*", "/account/verify"]
+  },
+  // Base de datos. Cloudflare la crea sola en el primer deploy.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "dameunaola-db" }
+  ],
+  // Datos no secretos. Los secretos (Stripe, Resend) se cargan en el panel de Cloudflare.
+  "vars": {
+    "SITE_URL": "https://dameunaola.com",
+    "OWNER_EMAIL": "juligomexdesign@gmail.com",
+    "MAIL_FROM": "Dame una Ola <hello@dameunaola.com>",
+    "SHIP_COUNTRIES": "US,BR,AR,UY,CL,MX,ES,PT",
+    // Cloudflare Access (panel /admin): completar cuando lo configures
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
+  },
+  "observability": { "enabled": true }
 }

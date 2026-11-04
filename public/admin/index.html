@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel — Dame una Ola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Panel interno: mismo lenguaje que la tienda (blanco, líneas negras, rosa checker) pero denso y funcional */
+  --paper:#fff; --ink:#111; --muted:#5b5b5b; --line:#111; --check:#F6C6DE; --pink:#E8A6C4;
+  --ok:#1f8a4c; --okbg:#dff5e7; --warn:#9a5b00; --warnbg:#fff1d6; --bad:#b0306a; --badbg:#fde6ef; --info:#1d5fa8; --infobg:#e3efff;
+  --display:"Archivo","Arial Black",sans-serif; --body:"Archivo",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+h1,h2,h3{margin:0;font-weight:900;font-stretch:125%;text-transform:uppercase;letter-spacing:-.01em;line-height:1}
+.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(14px,3vw,32px)}
+
+header.top{border-bottom:2px solid var(--ink)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+.brand img{width:44px}
+.brand b{font-weight:900;font-stretch:125%;font-size:18px;text-transform:uppercase}
+.brand span{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--check);border:2px solid var(--ink);padding:2px 8px}
+.who{font-size:13px;color:var(--muted)}
+.who a{color:var(--ink)}
+.checker{height:12px;background:repeating-conic-gradient(var(--check) 0 25%,#fff 0 50%) 0 0/12px 12px;border-bottom:2px solid var(--ink)}
+
+nav.tabs{border-bottom:2px solid var(--ink);overflow-x:auto}
+nav.tabs .wrap{display:flex;gap:0}
+nav.tabs button{background:none;border:none;border-right:2px solid var(--ink);padding:14px 18px;font-weight:900;font-stretch:125%;text-transform:uppercase;font-size:14px;cursor:pointer;white-space:nowrap}
+nav.tabs button:first-child{border-left:2px solid var(--ink)}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:#fff}
+nav.tabs button .n{display:inline-block;min-width:20px;margin-left:6px;padding:0 6px;border-radius:999px;background:var(--check);color:var(--ink);font-size:12px;font-stretch:100%}
+
+main{padding-block:36px 60px}
+section[hidden]{display:none}
+.head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.head h2{font-size:clamp(24px,3vw,34px)}
+.head p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+
+.btn{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ink);background:#fff;padding:9px 14px;font-weight:800;font-stretch:112%;text-transform:uppercase;font-size:13px;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{background:var(--check)}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:hover{background:#333}
+.btn.small{padding:5px 9px;font-size:12px}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.stat{border:2px solid var(--ink);padding:14px 16px}
+.stat small{display:block;font-weight:800;font-stretch:112%;text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.stat b{display:block;font-weight:900;font-stretch:125%;font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat.hl{background:var(--check)}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+.box{border:2px solid var(--ink);padding:16px 18px}
+.box h3{font-size:15px;margin-bottom:12px}
+
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 10px;border-bottom:1px solid #ddd;vertical-align:middle}
+th{font-weight:800;font-stretch:112%;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:2px solid var(--ink)}
+tr.click{cursor:pointer}
+tr.click:hover td{background:#fbf3f7}
+.tablewrap{border:2px solid var(--ink);overflow-x:auto}
+.tablewrap table th:first-child,.tablewrap table td:first-child{padding-left:14px}
+.thumb{width:44px;height:54px;object-fit:cover;border:1px solid var(--ink);background:#f4f4f2;display:block}
+
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:800;border:1.5px solid currentColor;white-space:nowrap}
+.pill.paid{color:var(--warn);background:var(--warnbg)}
+.pill.shipped{color:var(--info);background:var(--infobg)}
+.pill.delivered,.pill.active,.pill.on{color:var(--ok);background:var(--okbg)}
+.pill.cancelled,.pill.refunded,.pill.off{color:var(--bad);background:var(--badbg)}
+.pill.draft,.pill.archived,.pill.logged{color:var(--muted);background:#f1f1f1}
+.pill.sent{color:var(--ok);background:var(--okbg)}
+.pill.failed{color:var(--bad);background:var(--badbg)}
+.pill.test{color:#6b3fa0;background:#efe6fb}
+.stock{display:inline-flex;align-items:center;gap:6px}
+.stock input{width:70px;padding:5px 8px;border:2px solid var(--ink)}
+.low{color:var(--bad);font-weight:800}
+
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{border:2px solid var(--ink);background:#fff;padding:5px 12px;font-weight:700;cursor:pointer;border-radius:999px}
+.filters button[aria-pressed="true"]{background:var(--ink);color:#fff}
+
+form.f{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.field{display:grid;gap:5px}
+.field.full{grid-column:1/-1}
+.field label{font-weight:900;font-stretch:125%;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.field small{color:var(--muted);font-size:12px}
+.field input,.field select,.field textarea{border:2px solid var(--ink);border-radius:0;padding:9px 11px;background:#fff;width:100%}
+.field textarea{min-height:110px;resize:vertical}
+.field textarea.tall{min-height:280px;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.5}
+.imgpick{display:flex;gap:14px;align-items:center}
+.imgpick img{width:90px;height:110px;object-fit:cover;border:2px solid var(--ink);background:#f4f4f2}
+
+dialog{border:2px solid var(--ink);padding:0;width:min(760px,94vw);max-height:92vh;box-shadow:8px 8px 0 var(--ink)}
+dialog::backdrop{background:rgba(17,17,17,.35)}
+dialog .dh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:2px solid var(--ink);background:repeating-conic-gradient(var(--check) 0 25%,#fff 0 50%) 0 0/14px 14px}
+dialog .dh h3{background:#fff;border:2px solid var(--ink);padding:5px 10px;font-size:15px}
+dialog .db{padding:18px;overflow:auto;max-height:calc(92vh - 130px)}
+dialog .df{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:2px solid var(--ink)}
+.x{border:2px solid var(--ink);background:#fff;width:34px;height:34px;font-weight:900;font-size:18px;cursor:pointer}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:6px 12px;margin:0 0 14px}
+.kv dt{font-weight:800;font-size:12px;text-transform:uppercase;color:var(--muted)}
+.kv dd{margin:0}
+.items{border:2px solid var(--ink);margin:6px 0 16px}
+.items div{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid #ddd}
+.items div:last-child{border-bottom:none;font-weight:800}
+
+.tpl{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.preview{border:2px solid var(--ink);min-height:420px;background:#fafafa}
+.preview iframe{width:100%;height:560px;border:0;display:block;background:#fff}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips code{border:1.5px solid var(--ink);padding:1px 6px;font-size:12px;cursor:pointer;background:#fff}
+.chips code:hover{background:var(--check)}
+
+.checklist{display:grid;gap:10px}
+.check{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;border:2px solid var(--ink);padding:14px 16px}
+.check .dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-weight:900;font-size:14px}
+.check.on .dot{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.check h4{margin:0 0 4px;font-weight:900;font-stretch:112%;text-transform:uppercase;font-size:14px}
+.check p{margin:0;color:var(--muted);font-size:14px}
+.check ol{margin:6px 0 0;padding-left:20px;color:var(--ink);font-size:14px}
+
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;transition:transform .25s,opacity .25s;background:var(--ink);color:#fff;padding:11px 18px;border:2px solid var(--ink);font-weight:700;transition:transform .25s;z-index:99;max-width:90vw}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.err{background:var(--bad)}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.note{background:var(--warnbg);border:2px solid var(--warn);color:#5a3500;padding:10px 14px;margin-bottom:16px;font-size:14px}
+
+@media (max-width:900px){ .cards{grid-template-columns:1fr 1fr} .grid2,.tpl{grid-template-columns:1fr} }
+@media (max-width:560px){ form.f{grid-template-columns:1fr} .kv{grid-template-columns:1fr} .who{display:none} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/" title="Ver la tienda"><img src="/a/cat-head_ok.svg" alt=""><b>Dame una Ola</b><span>Panel</span></a>
+  <div class="who" id="who"></div>
+</div></header>
+<div class="checker" aria-hidden="true"></div>
+<nav class="tabs" aria-label="Secciones"><div class="wrap" role="tablist">
+  <button role="tab" data-tab="resumen" aria-selected="true">Resumen</button>
+  <button role="tab" data-tab="productos" aria-selected="false">Productos</button>
+  <button role="tab" data-tab="pedidos" aria-selected="false">Pedidos <span class="n" id="nShip">0</span></button>
+  <button role="tab" data-tab="emails" aria-selected="false">Mails</button>
+  <button role="tab" data-tab="config" aria-selected="false">Configuración</button>
+</div></nav>
+
+<main class="wrap">
+  <!-- RESUMEN -->
+  <section id="resumen">
+    <div class="head"><div><h2>Resumen</h2><p>Lo importante de la tienda de un vistazo.</p></div>
+      <button class="btn" id="btnTest">+ Crear pedido de prueba</button></div>
+    <div id="testNote"></div>
+    <div class="cards">
+      <div class="stat hl"><small>Para enviar</small><b id="sToShip">–</b></div>
+      <div class="stat"><small>Pedidos</small><b id="sOrders">–</b></div>
+      <div class="stat"><small>Vendido</small><b id="sRevenue">–</b></div>
+      <div class="stat"><small>Unidades en stock</small><b id="sStock">–</b></div>
+    </div>
+    <div class="grid2">
+      <div class="box"><h3>Últimos pedidos</h3><div id="recent"></div></div>
+      <div class="box"><h3>Stock bajo (5 o menos)</h3><div id="low"></div></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <section id="productos" hidden>
+    <div class="head"><div><h2>Productos</h2><p>Editá el stock directo en la tabla. Los productos en "Borrador" no se ven en la tienda.</p></div>
+      <button class="btn primary" id="btnNewProduct">+ Nuevo producto</button></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th></th><th>Producto</th><th>Precio</th><th>Stock</th><th>Vendidos</th><th>Estado</th><th></th></tr></thead>
+      <tbody id="prodRows"></tbody></table></div>
+  </section>
+
+  <!-- PEDIDOS -->
+  <section id="pedidos" hidden>
+    <div class="head"><div><h2>Pedidos</h2><p>Abrí un pedido para ver la dirección y marcarlo como enviado. Al marcarlo, el cliente recibe el mail de envío.</p></div></div>
+    <div class="filters" id="orderFilters">
+      <button aria-pressed="true" data-s="all">Todos</button><button aria-pressed="false" data-s="paid">Para enviar</button>
+      <button aria-pressed="false" data-s="shipped">Enviados</button><button aria-pressed="false" data-s="delivered">Entregados</button>
+      <button aria-pressed="false" data-s="cancelled">Cancelados</button>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Estado</th></tr></thead>
+      <tbody id="orderRows"></tbody></table></div>
+  </section>
+
+  <!-- MAILS -->
+  <section id="emails" hidden>
+    <div class="head"><div><h2>Mails</h2><p>Editá el texto de los mails automáticos. Las palabras entre llaves se reemplazan solas con los datos de cada pedido.</p></div></div>
+    <div class="filters" id="tplTabs">
+      <button aria-pressed="true" data-k="confirmation">Confirmación de compra</button>
+      <button aria-pressed="false" data-k="shipped">Pedido enviado</button>
+      <button aria-pressed="false" data-k="login">Link de acceso</button>
+    </div>
+    <div class="tpl">
+      <form class="f" id="tplForm" style="grid-template-columns:1fr;align-content:start">
+        <div class="field"><label for="tplSubject">Asunto</label><input id="tplSubject" required></div>
+        <div class="field"><label for="tplBody">Texto</label><textarea id="tplBody" class="tall" required></textarea>
+          <small>Hacé clic en un campo para insertarlo:</small><div class="chips" id="chips"></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Guardar</button>
+          <button class="btn" type="button" id="tplReset">Volver al texto original</button></div>
+      </form>
+      <div><div class="field"><label>Vista previa (con datos de ejemplo)</label></div>
+        <p id="pvSubject" style="margin:6px 0 8px;font-weight:800"></p>
+        <div class="preview"><iframe id="pv" title="Vista previa del mail"></iframe></div></div>
+    </div>
+    <div class="box" style="margin-top:22px"><h3>Últimos mails</h3>
+      <p style="margin:-4px 0 12px;color:var(--muted);font-size:14px">"Registrado" = guardado acá pero no enviado (falta conectar el servicio de mails). Hacé clic para verlo.</p>
+      <div id="outbox"></div></div>
+  </section>
+
+  <!-- CONFIG -->
+  <section id="config" hidden>
+    <div class="head"><div><h2>Configuración</h2><p>Qué está conectado y qué falta para que la tienda pueda vender de verdad.</p></div></div>
+    <div class="checklist" id="checklist"></div>
+  </section>
+</main>
+
+<!-- producto -->
+<dialog id="dlgProduct" aria-labelledby="dpT">
+  <div class="dh"><h3 id="dpT">Producto</h3><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <form class="f db" id="prodForm">
+    <div class="field full"><label for="pName">Nombre</label><input id="pName" required></div>
+    <div class="field full"><label for="pDesc">Descripción</label><textarea id="pDesc"></textarea></div>
+    <div class="field"><label for="pPrice">Precio (USD)</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
+    <div class="field"><label for="pStock">Stock</label><input id="pStock" type="number" min="0" step="1" required></div>
+    <div class="field"><label for="pSize">Talle</label><input id="pSize"><small>Ej.: One size (fits XL) · Baggy unisex</small></div>
+    <div class="field"><label for="pShip">Fecha estimada de envío</label><input id="pShip"><small>Se muestra en la tienda y en el mail. Ej.: in early 2027</small></div>
+    <div class="field"><label for="pStatus">Estado</label>
+      <select id="pStatus"><option value="active">Activo (se ve en la tienda)</option><option value="draft">Borrador (oculto)</option><option value="archived">Archivado</option></select></div>
+    <div class="field"><label for="pSort">Orden</label><input id="pSort" type="number" min="0" step="1"><small>Número más bajo = aparece primero.</small></div>
+    <div class="field full"><label for="pFile">Foto</label>
+      <div class="imgpick"><img id="pImg" alt=""><div><input id="pFile" type="file" accept="image/*"><br><small>Se achica sola a 1200 px antes de subirla.</small></div></div></div>
+    <div class="field full"><label for="pAlt">Descripción de la foto (accesibilidad)</label><input id="pAlt"><small>Ej.: Model wearing a pink tie-dye poncho</small></div>
+  </form>
+  <div class="df"><button class="btn danger" id="pArchive" type="button">Archivar</button><span style="flex:1"></span>
+    <button class="btn" data-close type="button">Cancelar</button><button class="btn primary" id="pSave" type="button">Guardar</button></div>
+</dialog>
+
+<!-- pedido -->
+<dialog id="dlgOrder" aria-labelledby="doT">
+  <div class="dh"><h3 id="doT">Pedido</h3><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="db" id="orderBody"></div>
+  <div class="df" id="orderFoot"></div>
+</dialog>
+
+<!-- pedido de prueba -->
+<dialog id="dlgTest" aria-labelledby="dtT">
+  <div class="dh"><h3 id="dtT">Pedido de prueba</h3><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <form class="f db" id="testForm">
+    <div class="field full"><p style="margin:0;color:var(--muted)">Simula una compra sin pasar por Stripe: crea el pedido, descuenta 1 unidad del stock y genera el mail de confirmación. Queda marcado como PRUEBA.</p></div>
+    <div class="field full"><label for="tProduct">Producto</label><select id="tProduct"></select></div>
+    <div class="field"><label for="tName">Nombre del cliente</label><input id="tName" value="Test Customer"></div>
+    <div class="field"><label for="tEmail">Email del cliente</label><input id="tEmail" type="email" value="juligomexdesign@gmail.com"></div>
+  </form>
+  <div class="df"><button class="btn" data-close type="button">Cancelar</button><button class="btn primary" id="tCreate" type="button">Crear pedido</button></div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const usd = (c) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format((c || 0) / 100);
+const date = (s) => s ? new Date(s).toLocaleString("es", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "—";
+const STATUS = { paid: "Para enviar", shipped: "Enviado", delivered: "Entregado", cancelled: "Cancelado", refunded: "Reembolsado" };
+const PSTATUS = { active: "Activo", draft: "Borrador", archived: "Archivado" };
+const MAILST = { sent: "Enviado", logged: "Registrado", failed: "Falló" };
+
+async function api(path, opts = {}) {
+  const r = await fetch("/api/admin" + path, { headers: { "content-type": "application/json" }, ...opts, body: opts.body && typeof opts.body !== "string" && !(opts.body instanceof Blob) ? JSON.stringify(opts.body) : opts.body });
+  const data = r.headers.get("content-type")?.includes("json") ? await r.json() : await r.text();
+  if (!r.ok) throw new Error(data.error || data || r.statusText);
+  return data;
+}
+function toast(msg, err) { const t = $("#toast"); t.textContent = msg; t.classList.toggle("err", !!err); t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 3200); }
+const fail = (e) => toast(e.message || String(e), true);
+$$("[data-close]").forEach((b) => b.addEventListener("click", () => b.closest("dialog").close()));
+
+/* pestañas */
+const loaders = {};
+function show(tab) {
+  $$("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  $$("main > section").forEach((s) => (s.hidden = s.id !== tab));
+  history.replaceState(null, "", "#" + tab);
+  loaders[tab]?.().catch(fail);
+}
+$$("nav.tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
+
+/* estado e integraciones */
+let STATUS_DATA = null;
+async function loadStatus() {
+  STATUS_DATA = await api("/status");
+  $("#who").innerHTML = `Entraste como <b>${esc(STATUS_DATA.you)}</b> · <a href="/">ver tienda</a>`;
+  const i = STATUS_DATA.integrations;
+  $("#testNote").innerHTML = !i.stripe ? `<div class="note"><b>Modo prueba:</b> Stripe todavía no está conectado, así que la tienda no cobra. Usá "Crear pedido de prueba" para practicar el flujo completo.</div>` : "";
+}
+
+/* RESUMEN */
+loaders.resumen = async () => {
+  const s = await api("/summary");
+  $("#sToShip").textContent = s.to_ship; $("#sOrders").textContent = s.orders; $("#sRevenue").textContent = usd(s.revenue_cents); $("#sStock").textContent = s.units_in_stock;
+  $("#nShip").textContent = s.to_ship;
+  $("#recent").innerHTML = s.recent.length ? `<table><tbody>${s.recent.map((o) => `<tr class="click" data-id="${o.id}"><td><b>${esc(o.number)}</b> ${o.is_test ? '<span class="pill test">Prueba</span>' : ""}</td><td>${esc(o.name || o.email)}</td><td>${usd(o.total_cents)}</td><td><span class="pill ${o.status}">${STATUS[o.status]}</span></td></tr>`).join("")}</tbody></table>` : `<div class="empty">Todavía no hay pedidos.</div>`;
+  $$("#recent tr").forEach((tr) => tr.addEventListener("click", () => openOrder(+tr.dataset.id)));
+  $("#low").innerHTML = s.low_stock.length ? s.low_stock.map((p) => `<p style="margin:0 0 8px">${esc(p.name)} — <span class="low">${p.stock} u.</span></p>`).join("") : `<div class="empty">Todo bien de stock.</div>`;
+};
+
+/* PRODUCTOS */
+let PRODUCTS = [];
+loaders.productos = async () => {
+  PRODUCTS = (await api("/products")).products;
+  $("#prodRows").innerHTML = PRODUCTS.length ? PRODUCTS.map((p) => `<tr>
+    <td>${p.image_url ? `<img class="thumb" src="${esc(p.image_url)}" alt="">` : '<span class="thumb"></span>'}</td>
+    <td><b>${esc(p.name)}</b><br><small style="color:var(--muted)">${esc(p.size_label)}</small></td>
+    <td>${usd(p.price_cents)}</td>
+    <td><span class="stock"><input type="number" min="0" value="${p.stock}" data-stock="${p.id}" aria-label="Stock de ${esc(p.name)}">${p.stock <= 5 ? '<span class="low">bajo</span>' : ""}</span></td>
+    <td>${p.sold}</td>
+    <td><span class="pill ${p.status}">${PSTATUS[p.status]}</span></td>
+    <td><button class="btn small" data-edit="${p.id}">Editar</button></td></tr>`).join("") : `<tr><td colspan="7" class="empty">No hay productos.</td></tr>`;
+  $$("[data-stock]").forEach((inp) => inp.addEventListener("change", async () => {
+    try { await api(`/products/${inp.dataset.stock}`, { method: "PUT", body: { stock: +inp.value } }); toast("Stock actualizado"); loaders.productos(); } catch (e) { fail(e); }
+  }));
+  $$("[data-edit]").forEach((b) => b.addEventListener("click", () => openProduct(PRODUCTS.find((p) => p.id == b.dataset.edit))));
+};
+let editing = null, imgUrl = "";
+function openProduct(p) {
+  editing = p || null; imgUrl = p?.image_url || "";
+  $("#dpT").textContent = p ? "Editar producto" : "Nuevo producto";
+  $("#pName").value = p?.name || ""; $("#pDesc").value = p?.description || "";
+  $("#pPrice").value = p ? (p.price_cents / 100).toFixed(2) : ""; $("#pStock").value = p?.stock ?? 10;
+  $("#pSize").value = p?.size_label || "One size (fits XL) · Baggy unisex"; $("#pShip").value = p?.ship_date || "in early 2027";
+  $("#pStatus").value = p?.status || "draft"; $("#pSort").value = p?.sort ?? 10; $("#pAlt").value = p?.image_alt || "";
+  $("#pImg").src = imgUrl || "data:image/gif;base64,R0lGODlhAQABAAAAACw="; $("#pFile").value = "";
+  $("#pArchive").hidden = !p;
+  $("#dlgProduct").showModal();
+}
+$("#btnNewProduct").addEventListener("click", () => openProduct(null));
+$("#pFile").addEventListener("change", async () => {
+  const f = $("#pFile").files[0]; if (!f) return;
+  try {
+    const bmp = await createImageBitmap(f); const k = Math.min(1, 1200 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise((r) => c.toBlob(r, "image/webp", .82));
+    const res = await fetch("/api/admin/images", { method: "POST", headers: { "content-type": "image/webp" }, body: blob });
+    const d = await res.json(); if (!res.ok) throw new Error(d.error);
+    imgUrl = d.url; $("#pImg").src = imgUrl; toast("Foto subida");
+  } catch (e) { fail(e); }
+});
+$("#pSave").addEventListener("click", async () => {
+  if (!$("#prodForm").reportValidity()) return;
+  const body = { name: $("#pName").value.trim(), description: $("#pDesc").value.trim(), price_cents: Math.round(parseFloat($("#pPrice").value) * 100),
+    stock: +$("#pStock").value, size_label: $("#pSize").value.trim(), ship_date: $("#pShip").value.trim(), status: $("#pStatus").value,
+    sort: +$("#pSort").value, image_url: imgUrl, image_alt: $("#pAlt").value.trim() };
+  try {
+    if (editing) await api(`/products/${editing.id}`, { method: "PUT", body }); else await api("/products", { method: "POST", body });
+    $("#dlgProduct").close(); toast("Producto guardado"); loaders.productos();
+  } catch (e) { fail(e); }
+});
+$("#pArchive").addEventListener("click", async () => {
+  if (!editing) return;
+  try { await api(`/products/${editing.id}`, { method: "DELETE" }); $("#dlgProduct").close(); toast("Producto archivado"); loaders.productos(); } catch (e) { fail(e); }
+});
+
+/* PEDIDOS */
+let ORDERS = [], filter = "all";
+loaders.pedidos = async () => {
+  ORDERS = (await api(`/orders?status=${filter}`)).orders;
+  $("#orderRows").innerHTML = ORDERS.length ? ORDERS.map((o) => `<tr class="click" data-id="${o.id}">
+    <td><b>${esc(o.number)}</b> ${o.is_test ? '<span class="pill test">Prueba</span>' : ""}</td><td>${date(o.created_at)}</td>
+    <td>${esc(o.name)}<br><small style="color:var(--muted)">${esc(o.email)}</small></td>
+    <td>${o.items.map((i) => `${i.qty} × ${esc(i.name)}`).join("<br>")}</td><td>${usd(o.total_cents)}</td>
+    <td><span class="pill ${o.status}">${STATUS[o.status]}</span></td></tr>`).join("") : `<tr><td colspan="6" class="empty">No hay pedidos en este estado.</td></tr>`;
+  $$("#orderRows tr[data-id]").forEach((tr) => tr.addEventListener("click", () => openOrder(+tr.dataset.id)));
+};
+$$("#orderFilters button").forEach((b) => b.addEventListener("click", () => {
+  filter = b.dataset.s; $$("#orderFilters button").forEach((x) => x.setAttribute("aria-pressed", x === b)); loaders.pedidos().catch(fail);
+}));
+async function openOrder(id) {
+  let o = ORDERS.find((x) => x.id === id);
+  if (!o) { ORDERS = (await api("/orders?status=all")).orders; o = ORDERS.find((x) => x.id === id); }
+  if (!o) return;
+  const a = o.address || {};
+  $("#doT").textContent = `Pedido ${o.number}`;
+  $("#orderBody").innerHTML = `
+    <p style="margin:0 0 14px"><span class="pill ${o.status}">${STATUS[o.status]}</span> ${o.is_test ? '<span class="pill test">Prueba</span>' : ""} <small style="color:var(--muted)">· ${date(o.created_at)}</small></p>
+    <dl class="kv"><dt>Cliente</dt><dd>${esc(o.name)}</dd><dt>Email</dt><dd><a href="mailto:${esc(o.email)}">${esc(o.email)}</a></dd>
+      ${o.phone ? `<dt>Teléfono</dt><dd>${esc(o.phone)}</dd>` : ""}
+      <dt>Dirección</dt><dd>${esc([a.line1, a.line2].filter(Boolean).join(", "))}<br>${esc([a.city, a.state, a.postal_code].filter(Boolean).join(", "))}<br>${esc(a.country || "")}</dd>
+      ${o.tracking ? `<dt>Envío</dt><dd>${esc(o.carrier)} · ${esc(o.tracking)} ${o.tracking_url ? `· <a href="${esc(o.tracking_url)}" target="_blank" rel="noopener">seguir</a>` : ""}<br><small>${date(o.shipped_at)}</small></dd>` : ""}</dl>
+    <div class="items">${o.items.map((i) => `<div><span>${i.qty} × ${esc(i.name)} <small style="color:var(--muted)">(${esc(i.size)})</small></span><span>${usd(i.price_cents * i.qty)}</span></div>`).join("")}
+      ${o.shipping_cents ? `<div style="font-weight:400"><span>Envío</span><span>${usd(o.shipping_cents)}</span></div>` : ""}<div><span>Total</span><span>${usd(o.total_cents)}</span></div></div>
+    ${o.status === "paid" ? `<form class="f" id="shipForm"><div class="field full"><h3 style="font-size:14px">Marcar como enviado</h3></div>
+      <div class="field"><label for="sCarrier">Empresa de envío</label><input id="sCarrier" placeholder="Correios, DHL, UPS…"></div>
+      <div class="field"><label for="sTrack">Número de seguimiento</label><input id="sTrack"></div>
+      <div class="field full"><label for="sUrl">Link de seguimiento (opcional)</label><input id="sUrl" type="url" placeholder="https://"></div>
+      <div class="field full"><label style="display:flex;gap:8px;align-items:center;text-transform:none;font-stretch:100%;font-weight:600;font-size:14px;letter-spacing:0"><input type="checkbox" id="sNotify" checked style="width:auto"> Mandarle al cliente el mail de "pedido enviado"</label></div></form>` : ""}
+    <div class="field full" style="margin-top:12px"><label for="oNote">Nota interna</label><textarea id="oNote" style="min-height:70px">${esc(o.note || "")}</textarea></div>`;
+  const foot = $("#orderFoot");
+  foot.innerHTML = `<select id="oStatus" class="btn" aria-label="Cambiar estado">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === o.status ? "selected" : ""}>${v}</option>`).join("")}</select>
+    <button class="btn" id="oSaveSt" type="button">Guardar estado y nota</button><span style="flex:1"></span>
+    ${o.status === "paid" ? `<button class="btn primary" id="oShip" type="button">Marcar como enviado</button>` : `<button class="btn" data-close type="button">Cerrar</button>`}`;
+  foot.querySelector("[data-close]")?.addEventListener("click", () => $("#dlgOrder").close());
+  $("#oSaveSt").addEventListener("click", async () => {
+    try { await api(`/orders/${o.id}`, { method: "PUT", body: { status: $("#oStatus").value, note: $("#oNote").value } }); toast("Pedido actualizado"); $("#dlgOrder").close(); refresh(); } catch (e) { fail(e); }
+  });
+  $("#oShip")?.addEventListener("click", async () => {
+    try {
+      const r = await api(`/orders/${o.id}/ship`, { method: "POST", body: { carrier: $("#sCarrier").value.trim(), tracking: $("#sTrack").value.trim(), tracking_url: $("#sUrl").value.trim(), notify: $("#sNotify").checked } });
+      if ($("#oNote").value !== (o.note || "")) await api(`/orders/${o.id}`, { method: "PUT", body: { note: $("#oNote").value } });
+      toast(r.mail === "sent" ? "Enviado ✓ — se mandó el mail al cliente" : r.mail === "logged" ? "Enviado ✓ — mail registrado (falta conectar el servicio de mails)" : r.mail === "failed" ? "Enviado ✓ pero el mail falló (ver Mails)" : "Marcado como enviado");
+      $("#dlgOrder").close(); refresh();
+    } catch (e) { fail(e); }
+  });
+  $("#dlgOrder").showModal();
+}
+function refresh() { const t = $("nav.tabs [aria-selected=true]").dataset.tab; loaders[t]?.().catch(fail); if (t !== "resumen") loaders.resumen().catch(() => {}); }
+
+/* pedido de prueba */
+$("#btnTest").addEventListener("click", async () => {
+  try {
+    const ps = (await api("/products")).products.filter((p) => p.status !== "archived");
+    $("#tProduct").innerHTML = ps.map((p) => `<option value="${p.id}">${esc(p.name)} — ${usd(p.price_cents)} (stock ${p.stock})</option>`).join("");
+    $("#dlgTest").showModal();
+  } catch (e) { fail(e); }
+});
+$("#tCreate").addEventListener("click", async () => {
+  try { const r = await api("/test-order", { method: "POST", body: { product_id: +$("#tProduct").value, name: $("#tName").value, email: $("#tEmail").value } });
+    $("#dlgTest").close(); toast(`Pedido ${r.order.number} creado`); refresh(); } catch (e) { fail(e); }
+});
+
+/* MAILS */
+let TPLS = [], tplKey = "confirmation", PH = [];
+loaders.emails = async () => {
+  const d = await api("/templates"); TPLS = d.templates; PH = d.placeholders;
+  $("#chips").innerHTML = PH.map((p) => `<code data-ph="${p}">{{${p}}}</code>`).join("");
+  $$("#chips code").forEach((c) => c.addEventListener("click", () => {
+    const ta = $("#tplBody"), s = ta.selectionStart, t = `{{${c.dataset.ph}}}`;
+    ta.value = ta.value.slice(0, s) + t + ta.value.slice(ta.selectionEnd); ta.focus(); ta.selectionStart = ta.selectionEnd = s + t.length; preview();
+  }));
+  fillTpl(); loadOutbox();
+};
+function fillTpl() { const t = TPLS.find((x) => x.key === tplKey); $("#tplSubject").value = t?.subject || ""; $("#tplBody").value = t?.body || ""; preview(); }
+$$("#tplTabs button").forEach((b) => b.addEventListener("click", () => { tplKey = b.dataset.k; $$("#tplTabs button").forEach((x) => x.setAttribute("aria-pressed", x === b)); fillTpl(); }));
+let pvT;
+function preview() { clearTimeout(pvT); pvT = setTimeout(async () => {
+  try { const d = await api("/preview", { method: "POST", body: { subject: $("#tplSubject").value, body: $("#tplBody").value } }); $("#pvSubject").textContent = d.subject; $("#pv").srcdoc = d.html; } catch (e) { fail(e); }
+}, 250); }
+["input"].forEach((ev) => { $("#tplSubject").addEventListener(ev, preview); $("#tplBody").addEventListener(ev, preview); });
+$("#tplForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try { await api(`/templates/${tplKey}`, { method: "PUT", body: { subject: $("#tplSubject").value, body: $("#tplBody").value } }); toast("Mail guardado"); TPLS = (await api("/templates")).templates; } catch (err) { fail(err); }
+});
+$("#tplReset").addEventListener("click", async () => {
+  try { await api(`/templates/${tplKey}/reset`, { method: "POST" }); TPLS = (await api("/templates")).templates; fillTpl(); toast("Texto original restaurado"); } catch (e) { fail(e); }
+});
+async function loadOutbox() {
+  const { outbox } = await api("/outbox");
+  $("#outbox").innerHTML = outbox.length ? `<table><thead><tr><th>Fecha</th><th>Para</th><th>Asunto</th><th>Estado</th></tr></thead><tbody>${outbox.map((m) => `<tr class="click" data-id="${m.id}"><td>${date(m.created_at)}</td><td>${esc(m.to_email)}</td><td>${esc(m.subject)}</td><td><span class="pill ${m.status}" title="${esc(m.error)}">${MAILST[m.status]}</span></td></tr>`).join("")}</tbody></table>` : `<div class="empty">Todavía no se generó ningún mail.</div>`;
+  $$("#outbox tr[data-id]").forEach((tr) => tr.addEventListener("click", () => window.open(`/api/admin/outbox/${tr.dataset.id}`, "_blank", "noopener")));
+}
+
+/* CONFIG */
+loaders.config = async () => {
+  await loadStatus();
+  const i = STATUS_DATA.integrations;
+  const item = (on, title, desc, steps) => `<div class="check ${on ? "on" : ""}"><span class="dot">${on ? "✓" : ""}</span><div><h4>${title}</h4><p>${desc}</p>${!on && steps ? `<ol>${steps.map((s) => `<li>${s}</li>`).join("")}</ol>` : ""}</div><span class="pill ${on ? "on" : "off"}">${on ? "Conectado" : "Falta"}</span></div>`;
+  $("#checklist").innerHTML = [
+    item(true, "Base de datos", "Productos, stock, pedidos y clientes se guardan en Cloudflare D1."),
+    item(i.access, "Acceso seguro al panel", "Solo tu Gmail puede abrir /admin (Cloudflare Access).",
+      ["Pedile a Claude los pasos de Cloudflare Access y pasale el Team domain y el AUD tag."]),
+    item(i.email, "Envío de mails (Resend)", i.email ? `Los mails salen desde ${esc(i.mail_from)}.` : "Mientras falte, los mails se guardan en la pestaña Mails pero no se envían.",
+      ["Crear cuenta gratis en resend.com", "Agregar el dominio dameunaola.com (se conecta con Cloudflare en 1 clic)", "Crear una API key y cargarla en Cloudflare como secreto RESEND_API_KEY"]),
+    item(i.stripe, `Pagos (Stripe)${i.stripe ? " — modo " + (i.stripe_mode === "live" ? "REAL" : "prueba") : ""}`, i.stripe ? "El botón Pre-order abre el checkout de Stripe." : "Mientras falte, el botón Pre-order avisa que las ventas abren pronto.",
+      ["Crear cuenta en stripe.com (podés usar el modo prueba sin activar la cuenta)", "Copiar la Secret key de prueba (sk_test_…)", "Cargarla en Cloudflare como secreto STRIPE_SECRET_KEY"]),
+    item(i.stripe_webhook, "Aviso de Stripe al sitio (webhook)", "Hace que cada pago se convierta en un pedido del panel y descuente stock.",
+      ["En Stripe → Developers → Webhooks, agregar el endpoint https://dameunaola.com/api/stripe/webhook con el evento checkout.session.completed", "Copiar el Signing secret (whsec_…) y cargarlo como secreto STRIPE_WEBHOOK_SECRET"]),
+    item(true, "Países de envío", `Stripe pide dirección de: ${esc(STATUS_DATA.ship_countries)}. Para cambiarlos, pedíselo a Claude.`),
+  ].join("");
+};
+
+/* inicio */
+loadStatus().then(() => { const h = (location.hash || "").slice(1); show(["resumen","productos","pedidos","emails","config"].includes(h) ? h : "resumen"); }).catch((e) => {
+  document.querySelector("main").innerHTML = `<div class="note" style="margin-top:24px"><b>No se pudo abrir el panel.</b> ${esc(e.message)}</div>`;
+});
+loaders.resumen().catch(() => {});
+})();
+</script>
+</body>
+</html>
