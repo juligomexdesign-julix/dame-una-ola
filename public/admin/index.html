@@ -27,7 +27,15 @@ h1,h2,h3{margin:0;font-weight:900;font-stretch:125%;text-transform:uppercase;let
 header.top{border-bottom:2px solid var(--ink)}
 header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
-.brand img{width:44px}
+.brand .cat{position:relative;width:46px;aspect-ratio:310/252;flex:none;background:none;border:0;padding:0}
+.brand .cat img{position:absolute}
+.brand .cat .head{inset:0;width:100%;height:100%}
+.brand .cat .sp{width:17.42%;height:23.6%;top:46.83%;animation:duoSpin 3.2s linear infinite}
+.brand .cat .sl{left:21.61%}.brand .cat .sr2{left:60.65%}
+.brand .cat .star{left:41.94%;top:20.24%;width:17.74%;height:26.19%;transform-origin:50% 55%;animation:duoPulse 1.8s ease-in-out infinite}
+@keyframes duoSpin{to{transform:rotate(360deg)}}
+@keyframes duoPulse{0%,100%{transform:scale(.75)}50%{transform:scale(1.35)}}
+@media (prefers-reduced-motion:reduce){.brand .cat .sp,.brand .cat .star{animation:none}}
 .brand b{font-weight:900;font-stretch:125%;font-size:18px;text-transform:uppercase}
 .brand span{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--check);border:2px solid var(--ink);padding:2px 8px}
 .who{font-size:13px;color:var(--muted)}
@@ -142,7 +150,7 @@ dialog .df{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;borde
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="brand" href="/" title="View store"><img src="/a/cat-head_ok.svg" alt=""><b>Dame una Ola</b><span>Admin</span></a>
+  <a class="brand" href="/" title="View store"><span class="cat" aria-hidden="true"><img class="head" src="/a/cat-head_ok.svg" alt=""><img class="sp sl" src="/a/eye-screen-left_ok.svg" alt=""><img class="sp sr2" src="/a/eye-screen-right_ok.svg" alt=""><img class="star" src="/a/third-eye-star.svg" alt=""></span><b>Dame una Ola</b><span>Admin</span></a>
   <div class="who" id="who"></div>
 </div></header>
 <div class="checker" aria-hidden="true"></div>
