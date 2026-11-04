@@ -24,8 +24,17 @@ nav{padding:clamp(24px,4vw,44px) 16px 0}
 nav ul{display:flex;justify-content:center;gap:clamp(18px,4vw,48px);list-style:none;margin:0;padding:0;flex-wrap:wrap}
 nav a{font-weight:900;font-stretch:125%;font-size:clamp(16px,2.2vw,30px);text-transform:uppercase;color:var(--ink);text-decoration:none}
 nav a[aria-current]{text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:8px}
-.logo{display:block;width:clamp(150px,16vw,210px);margin:28px auto 0}
-.logo img{width:100%}
+.logo{display:block;position:relative;width:clamp(170px,20vw,260px);aspect-ratio:801/470;margin:28px auto 0}
+.logo .arc{position:absolute;inset:0 0 auto 0;width:100%}
+.logo .cat{position:absolute;left:50%;bottom:-4%;width:37%;transform:translateX(-50%);aspect-ratio:310/252}
+.logo .cat img{position:absolute}
+.logo .cat .head{inset:0;width:100%;height:100%}
+.logo .cat .sp{width:17.42%;height:23.6%;top:46.83%;animation:duoSpin 3.2s linear infinite}
+.logo .cat .sl{left:21.61%}.logo .cat .sr2{left:60.65%}
+.logo .cat .star{left:41.94%;top:20.24%;width:17.74%;height:26.19%;transform-origin:50% 55%;animation:duoPulse 1.8s ease-in-out infinite}
+@keyframes duoSpin{to{transform:rotate(360deg)}}
+@keyframes duoPulse{0%,100%{transform:scale(.75)}50%{transform:scale(1.35)}}
+@media (prefers-reduced-motion:reduce){.logo .cat .sp,.logo .cat .star{animation:none}}
 main{flex:1;width:min(860px,100% - 32px);margin:clamp(28px,5vw,56px) auto 80px}
 .tape{border-block:2px solid var(--ink);background:repeating-conic-gradient(var(--check) 0 25%,#fff 0 50%) 0 0/20px 20px;padding:8px 0;margin:0 0 32px}
 .tape span{display:block;text-align:center;font-weight:900;font-stretch:125%;font-size:clamp(14px,2vw,22px);text-transform:uppercase}
@@ -66,7 +75,7 @@ input[type=email]{flex:1 1 260px;border:2px solid var(--ink);padding:13px 14px;f
 <nav aria-label="Main"><ul>
   <li><a href="/#about">About</a></li><li><a href="/#shop">Shop</a></li><li><a href="/#contact">Contact</a></li><li><a href="/account" aria-current="page">Account</a></li>
 </ul></nav>
-<a class="logo" href="/" aria-label="Dame una Ola, home"><img src="/a/dame-una-ola-logo.svg" alt=""></a>
+<a class="logo" href="/" aria-label="Dame una Ola, home"><img class="arc" src="/a/dame-una-ola-logo.svg" alt=""><span class="cat" aria-hidden="true"><img class="head" src="/a/cat-head_ok.svg" alt=""><img class="sp sl" src="/a/eye-screen-left_ok.svg" alt=""><img class="sp sr2" src="/a/eye-screen-right_ok.svg" alt=""><img class="star" src="/a/third-eye-star.svg" alt=""></span></a>
 
 <main>
   <div class="tape" aria-hidden="true"><span>✦ My orders ✦</span></div>
