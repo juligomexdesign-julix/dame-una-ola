@@ -20,7 +20,7 @@
     "MAIL_FROM": "Dame una Ola <hello@dameunaola.com>",
     "SHIP_COUNTRIES": "US,BR,AR,UY,CL,MX,ES,PT",
     // Cloudflare Access (panel /admin): completar cuando lo configures
-    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_TEAM_DOMAIN": "https://small-sound-f920.cloudflareaccess.com",
     "ACCESS_AUD": ""
   },
   "observability": { "enabled": true }
