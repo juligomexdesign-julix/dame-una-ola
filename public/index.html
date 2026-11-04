@@ -371,7 +371,7 @@ addEventListener('hashchange',route); route();
 
 /* formulario de contacto */
 const cf=document.getElementById('cf'), note=document.getElementById('cfNote');
-const rules=[['cfName','eName',v=>v.trim().length>1,'Tell us your name.'],['cfEmail','eEmail',v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v),'Enter an email like you@mail.com.'],['cfMsg','eMsg',v=>v.trim().length>4,'Write a short message.']];
+const rules=[['cfName','eName',v=>v.trim().length>=1,'Tell us your name.'],['cfEmail','eEmail',v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v),'Enter an email like you@mail.com.'],['cfMsg','eMsg',v=>v.trim().length>=2,'Write a message so we know how to help.']];
 cf.addEventListener('submit',e=>{
   e.preventDefault(); let ok=true;
   rules.forEach(([id,eid,test,txt])=>{ const el=document.getElementById(id), f=el.closest('.field'), good=test(el.value); f.classList.toggle('bad',!good); document.getElementById(eid).textContent=good?'':txt; if(!good&&ok){el.focus();ok=false;} });
