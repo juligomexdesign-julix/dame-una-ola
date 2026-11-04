@@ -21,7 +21,7 @@
     "SHIP_COUNTRIES": "US,BR,AR,UY,CL,MX,ES,PT",
     // Cloudflare Access (panel /admin): completar cuando lo configures
     "ACCESS_TEAM_DOMAIN": "https://small-sound-f920.cloudflareaccess.com",
-    "ACCESS_AUD": ""
+    "ACCESS_AUD": "8258dcd78442f69b683901aa4f652c2f94a34f6b292cb8473cdefaef2f9e02fd"
   },
   "observability": { "enabled": true }
 }
