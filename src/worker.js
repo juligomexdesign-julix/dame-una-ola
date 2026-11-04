@@ -416,7 +416,7 @@ async function adminApi(req, env, url, who) {
   }
   if (path === "/api/admin/products" && method === "POST") {
     const b = await req.json();
-    if (!b.name) return bad("El producto necesita un nombre.");
+    if (!b.name) return bad("Products need a name.");
     const slug = slugify(b.slug || b.name);
     const r = await env.DB.prepare(`INSERT INTO products (slug,name,description,price_cents,size_label,stock,status,image_url,image_alt,ship_date,sort,created_at,updated_at)
       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(slug, b.name, b.description || "", Math.round(b.price_cents || 0), b.size_label || "One size (fits XL) · Baggy unisex",
@@ -433,7 +433,7 @@ async function adminApi(req, env, url, who) {
         if (["price_cents", "stock", "sort"].includes(f)) v = Math.max(0, Math.round(Number(v) || 0));
         sets.push(`${f}=?`); vals.push(v);
       }
-      if (!sets.length) return bad("Nada para actualizar.");
+      if (!sets.length) return bad("Nothing to update.");
       await env.DB.prepare(`UPDATE products SET ${sets.join(",")}, updated_at=? WHERE id=?`).bind(...vals, now(), m[1]).run();
       return json({ ok: true });
     }
@@ -444,9 +444,9 @@ async function adminApi(req, env, url, who) {
   }
   if (path === "/api/admin/images" && method === "POST") {
     const mime = req.headers.get("content-type") || "image/webp";
-    if (!/^image\/(webp|jpeg|png)$/.test(mime)) return bad("Formato de imagen no soportado.");
+    if (!/^image\/(webp|jpeg|png)$/.test(mime)) return bad("Use a JPG, PNG or WebP image.");
     const buf = await req.arrayBuffer();
-    if (buf.byteLength > 900_000) return bad("La imagen es muy pesada (máx. 900 KB).");
+    if (buf.byteLength > 900_000) return bad("That image is too large (max 900 KB).");
     const r = await env.DB.prepare("INSERT INTO images (mime,data,created_at) VALUES (?,?,?)").bind(mime, buf, now()).run();
     return json({ url: `/api/images/${r.meta.last_row_id}` }, 201);
   }
@@ -470,7 +470,7 @@ async function adminApi(req, env, url, who) {
   if ((m = path.match(/^\/api\/admin\/orders\/(\d+)$/)) && method === "PUT") {
     const b = await req.json();
     const allowed = ["paid", "shipped", "delivered", "cancelled", "refunded"];
-    if (b.status && !allowed.includes(b.status)) return bad("Estado inválido.");
+    if (b.status && !allowed.includes(b.status)) return bad("Invalid status.");
     if (b.status) await env.DB.prepare("UPDATE orders SET status=? WHERE id=?").bind(b.status, m[1]).run();
     if ("note" in b) await env.DB.prepare("UPDATE orders SET note=? WHERE id=?").bind(b.note, m[1]).run();
     return json({ ok: true });
@@ -478,9 +478,9 @@ async function adminApi(req, env, url, who) {
   if (path === "/api/admin/test-order" && method === "POST") {
     const b = await req.json();
     const p = await env.DB.prepare("SELECT * FROM products WHERE id=?").bind(b.product_id).first();
-    if (!p) return bad("Elegí un producto.");
+    if (!p) return bad("Choose a product.");
     const e = cleanEmail(b.email || who.email);
-    if (!validEmail(e)) return bad("Email inválido.");
+    if (!validEmail(e)) return bad("Invalid email.");
     const order = await createOrder(env, req, {
       email: e, name: b.name || "Test Customer",
       address: { line1: "123 Ocean Ave", city: "Florianópolis", state: "SC", postal_code: "88000-000", country: "BR" },
@@ -497,14 +497,14 @@ async function adminApi(req, env, url, who) {
   }
   if ((m = path.match(/^\/api\/admin\/templates\/(\w+)$/)) && method === "PUT") {
     const b = await req.json();
-    if (!b.subject || !b.body) return bad("Asunto y texto son obligatorios.");
+    if (!b.subject || !b.body) return bad("Subject and message are required.");
     await env.DB.prepare("INSERT INTO templates (key,subject,body,updated_at) VALUES (?,?,?,?) ON CONFLICT(key) DO UPDATE SET subject=excluded.subject, body=excluded.body, updated_at=excluded.updated_at")
       .bind(m[1], b.subject, b.body, now()).run();
     return json({ ok: true });
   }
   if ((m = path.match(/^\/api\/admin\/templates\/(\w+)\/reset$/)) && method === "POST") {
     const d = DEFAULT_TEMPLATES[m[1]];
-    if (!d) return bad("No existe.");
+    if (!d) return bad("Not found.");
     await env.DB.prepare("UPDATE templates SET subject=?, body=?, updated_at=? WHERE key=?").bind(d.subject, d.body, now(), m[1]).run();
     return json({ ok: true });
   }
@@ -521,7 +521,7 @@ async function adminApi(req, env, url, who) {
   }
   if ((m = path.match(/^\/api\/admin\/outbox\/(\d+)$/)) && method === "GET") {
     const r = await env.DB.prepare("SELECT * FROM outbox WHERE id=?").bind(m[1]).first();
-    return r ? new Response(r.html, { headers: { "content-type": "text/html; charset=utf-8" } }) : bad("No existe.", 404);
+    return r ? new Response(r.html, { headers: { "content-type": "text/html; charset=utf-8" } }) : bad("Not found.", 404);
   }
 
   return bad("Not found", 404);

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Panel — Dame una Ola</title>
+<title>Admin — Dame una Ola</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Panel interno: mismo lenguaje que la tienda (blanco, líneas negras, rosa checker) pero denso y funcional */
+  /* Admin: same visual language as the store (white, black lines, pink checker), denser and functional */
   --paper:#fff; --ink:#111; --muted:#5b5b5b; --line:#111; --check:#F6C6DE; --pink:#E8A6C4;
   --ok:#1f8a4c; --okbg:#dff5e7; --warn:#9a5b00; --warnbg:#fff1d6; --bad:#b0306a; --badbg:#fde6ef; --info:#1d5fa8; --infobg:#e3efff;
   --display:"Archivo","Arial Black",sans-serif; --body:"Archivo",system-ui,-apple-system,sans-serif;
@@ -142,128 +142,128 @@ dialog .df{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;borde
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="brand" href="/" title="Ver la tienda"><img src="/a/cat-head_ok.svg" alt=""><b>Dame una Ola</b><span>Panel</span></a>
+  <a class="brand" href="/" title="View store"><img src="/a/cat-head_ok.svg" alt=""><b>Dame una Ola</b><span>Admin</span></a>
   <div class="who" id="who"></div>
 </div></header>
 <div class="checker" aria-hidden="true"></div>
-<nav class="tabs" aria-label="Secciones"><div class="wrap" role="tablist">
-  <button role="tab" data-tab="resumen" aria-selected="true">Resumen</button>
-  <button role="tab" data-tab="productos" aria-selected="false">Productos</button>
-  <button role="tab" data-tab="pedidos" aria-selected="false">Pedidos <span class="n" id="nShip">0</span></button>
-  <button role="tab" data-tab="emails" aria-selected="false">Mails</button>
-  <button role="tab" data-tab="config" aria-selected="false">Configuración</button>
+<nav class="tabs" aria-label="Sections"><div class="wrap" role="tablist">
+  <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+  <button role="tab" data-tab="products" aria-selected="false">Products</button>
+  <button role="tab" data-tab="orders" aria-selected="false">Orders <span class="n" id="nShip">0</span></button>
+  <button role="tab" data-tab="emails" aria-selected="false">Emails</button>
+  <button role="tab" data-tab="settings" aria-selected="false">Settings</button>
 </div></nav>
 
 <main class="wrap">
-  <!-- RESUMEN -->
-  <section id="resumen">
-    <div class="head"><div><h2>Resumen</h2><p>Lo importante de la tienda de un vistazo.</p></div>
-      <button class="btn" id="btnTest">+ Crear pedido de prueba</button></div>
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="head"><div><h2>Overview</h2><p>Your store at a glance.</p></div>
+      <button class="btn" id="btnTest">+ Create test order</button></div>
     <div id="testNote"></div>
     <div class="cards">
-      <div class="stat hl"><small>Para enviar</small><b id="sToShip">–</b></div>
-      <div class="stat"><small>Pedidos</small><b id="sOrders">–</b></div>
-      <div class="stat"><small>Vendido</small><b id="sRevenue">–</b></div>
-      <div class="stat"><small>Unidades en stock</small><b id="sStock">–</b></div>
+      <div class="stat hl"><small>To ship</small><b id="sToShip">–</b></div>
+      <div class="stat"><small>Orders</small><b id="sOrders">–</b></div>
+      <div class="stat"><small>Revenue</small><b id="sRevenue">–</b></div>
+      <div class="stat"><small>Units in stock</small><b id="sStock">–</b></div>
     </div>
     <div class="grid2">
-      <div class="box"><h3>Últimos pedidos</h3><div id="recent"></div></div>
-      <div class="box"><h3>Stock bajo (5 o menos)</h3><div id="low"></div></div>
+      <div class="box"><h3>Latest orders</h3><div id="recent"></div></div>
+      <div class="box"><h3>Low stock (5 or less)</h3><div id="low"></div></div>
     </div>
   </section>
 
-  <!-- PRODUCTOS -->
-  <section id="productos" hidden>
-    <div class="head"><div><h2>Productos</h2><p>Editá el stock directo en la tabla. Los productos en "Borrador" no se ven en la tienda.</p></div>
-      <button class="btn primary" id="btnNewProduct">+ Nuevo producto</button></div>
+  <!-- PRODUCTS -->
+  <section id="products" hidden>
+    <div class="head"><div><h2>Products</h2><p>Edit stock right in the table. Draft products are hidden from the store.</p></div>
+      <button class="btn primary" id="btnNewProduct">+ New product</button></div>
     <div class="tablewrap"><table>
-      <thead><tr><th></th><th>Producto</th><th>Precio</th><th>Stock</th><th>Vendidos</th><th>Estado</th><th></th></tr></thead>
+      <thead><tr><th></th><th>Product</th><th>Price</th><th>Stock</th><th>Sold</th><th>Status</th><th></th></tr></thead>
       <tbody id="prodRows"></tbody></table></div>
   </section>
 
-  <!-- PEDIDOS -->
-  <section id="pedidos" hidden>
-    <div class="head"><div><h2>Pedidos</h2><p>Abrí un pedido para ver la dirección y marcarlo como enviado. Al marcarlo, el cliente recibe el mail de envío.</p></div></div>
+  <!-- ORDERS -->
+  <section id="orders" hidden>
+    <div class="head"><div><h2>Orders</h2><p>Open an order to see the shipping address and mark it as shipped. The customer gets the shipping email automatically.</p></div></div>
     <div class="filters" id="orderFilters">
-      <button aria-pressed="true" data-s="all">Todos</button><button aria-pressed="false" data-s="paid">Para enviar</button>
-      <button aria-pressed="false" data-s="shipped">Enviados</button><button aria-pressed="false" data-s="delivered">Entregados</button>
-      <button aria-pressed="false" data-s="cancelled">Cancelados</button>
+      <button aria-pressed="true" data-s="all">All</button><button aria-pressed="false" data-s="paid">To ship</button>
+      <button aria-pressed="false" data-s="shipped">Shipped</button><button aria-pressed="false" data-s="delivered">Delivered</button>
+      <button aria-pressed="false" data-s="cancelled">Cancelled</button>
     </div>
     <div class="tablewrap"><table>
-      <thead><tr><th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Estado</th></tr></thead>
+      <thead><tr><th>Order</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
       <tbody id="orderRows"></tbody></table></div>
   </section>
 
-  <!-- MAILS -->
+  <!-- EMAILS -->
   <section id="emails" hidden>
-    <div class="head"><div><h2>Mails</h2><p>Editá el texto de los mails automáticos. Las palabras entre llaves se reemplazan solas con los datos de cada pedido.</p></div></div>
+    <div class="head"><div><h2>Emails</h2><p>Edit your automatic emails. Words in curly braces are replaced with each order's details.</p></div></div>
     <div class="filters" id="tplTabs">
-      <button aria-pressed="true" data-k="confirmation">Confirmación de compra</button>
-      <button aria-pressed="false" data-k="shipped">Pedido enviado</button>
-      <button aria-pressed="false" data-k="login">Link de acceso</button>
+      <button aria-pressed="true" data-k="confirmation">Order confirmation</button>
+      <button aria-pressed="false" data-k="shipped">Order shipped</button>
+      <button aria-pressed="false" data-k="login">Login link</button>
     </div>
     <div class="tpl">
       <form class="f" id="tplForm" style="grid-template-columns:1fr;align-content:start">
-        <div class="field"><label for="tplSubject">Asunto</label><input id="tplSubject" required></div>
-        <div class="field"><label for="tplBody">Texto</label><textarea id="tplBody" class="tall" required></textarea>
-          <small>Hacé clic en un campo para insertarlo:</small><div class="chips" id="chips"></div></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Guardar</button>
-          <button class="btn" type="button" id="tplReset">Volver al texto original</button></div>
+        <div class="field"><label for="tplSubject">Subject</label><input id="tplSubject" required></div>
+        <div class="field"><label for="tplBody">Message</label><textarea id="tplBody" class="tall" required></textarea>
+          <small>Click a field to insert it:</small><div class="chips" id="chips"></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Save</button>
+          <button class="btn" type="button" id="tplReset">Restore original text</button></div>
       </form>
-      <div><div class="field"><label>Vista previa (con datos de ejemplo)</label></div>
+      <div><div class="field"><label>Preview (sample data)</label></div>
         <p id="pvSubject" style="margin:6px 0 8px;font-weight:800"></p>
-        <div class="preview"><iframe id="pv" title="Vista previa del mail"></iframe></div></div>
+        <div class="preview"><iframe id="pv" title="Email preview"></iframe></div></div>
     </div>
-    <div class="box" style="margin-top:22px"><h3>Últimos mails</h3>
-      <p style="margin:-4px 0 12px;color:var(--muted);font-size:14px">"Registrado" = guardado acá pero no enviado (falta conectar el servicio de mails). Hacé clic para verlo.</p>
+    <div class="box" style="margin-top:22px"><h3>Recent emails</h3>
+      <p style="margin:-4px 0 12px;color:var(--muted);font-size:14px">"Logged" means saved here but not sent yet (email service not connected). Click a row to open it.</p>
       <div id="outbox"></div></div>
   </section>
 
-  <!-- CONFIG -->
-  <section id="config" hidden>
-    <div class="head"><div><h2>Configuración</h2><p>Qué está conectado y qué falta para que la tienda pueda vender de verdad.</p></div></div>
+  <!-- SETTINGS -->
+  <section id="settings" hidden>
+    <div class="head"><div><h2>Settings</h2><p>What's connected and what's still needed before the store can take real orders.</p></div></div>
     <div class="checklist" id="checklist"></div>
   </section>
 </main>
 
-<!-- producto -->
+<!-- product -->
 <dialog id="dlgProduct" aria-labelledby="dpT">
-  <div class="dh"><h3 id="dpT">Producto</h3><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="dh"><h3 id="dpT">Product</h3><button class="x" data-close aria-label="Close">×</button></div>
   <form class="f db" id="prodForm">
-    <div class="field full"><label for="pName">Nombre</label><input id="pName" required></div>
-    <div class="field full"><label for="pDesc">Descripción</label><textarea id="pDesc"></textarea></div>
-    <div class="field"><label for="pPrice">Precio (USD)</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
+    <div class="field full"><label for="pName">Name</label><input id="pName" required></div>
+    <div class="field full"><label for="pDesc">Description</label><textarea id="pDesc"></textarea></div>
+    <div class="field"><label for="pPrice">Price (USD)</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
     <div class="field"><label for="pStock">Stock</label><input id="pStock" type="number" min="0" step="1" required></div>
-    <div class="field"><label for="pSize">Talle</label><input id="pSize"><small>Ej.: One size (fits XL) · Baggy unisex</small></div>
-    <div class="field"><label for="pShip">Fecha estimada de envío</label><input id="pShip"><small>Se muestra en la tienda y en el mail. Ej.: in early 2027</small></div>
-    <div class="field"><label for="pStatus">Estado</label>
-      <select id="pStatus"><option value="active">Activo (se ve en la tienda)</option><option value="draft">Borrador (oculto)</option><option value="archived">Archivado</option></select></div>
-    <div class="field"><label for="pSort">Orden</label><input id="pSort" type="number" min="0" step="1"><small>Número más bajo = aparece primero.</small></div>
-    <div class="field full"><label for="pFile">Foto</label>
-      <div class="imgpick"><img id="pImg" alt=""><div><input id="pFile" type="file" accept="image/*"><br><small>Se achica sola a 1200 px antes de subirla.</small></div></div></div>
-    <div class="field full"><label for="pAlt">Descripción de la foto (accesibilidad)</label><input id="pAlt"><small>Ej.: Model wearing a pink tie-dye poncho</small></div>
+    <div class="field"><label for="pSize">Size</label><input id="pSize"><small>e.g. One size (fits XL) · Baggy unisex</small></div>
+    <div class="field"><label for="pShip">Estimated ship date</label><input id="pShip"><small>Shown in the store and emails. e.g. in early 2027</small></div>
+    <div class="field"><label for="pStatus">Status</label>
+      <select id="pStatus"><option value="active">Active (visible in store)</option><option value="draft">Draft (hidden)</option><option value="archived">Archived</option></select></div>
+    <div class="field"><label for="pSort">Sort order</label><input id="pSort" type="number" min="0" step="1"><small>Lower number shows first.</small></div>
+    <div class="field full"><label for="pFile">Photo</label>
+      <div class="imgpick"><img id="pImg" alt=""><div><input id="pFile" type="file" accept="image/*"><br><small>Automatically resized to 1200 px before upload.</small></div></div></div>
+    <div class="field full"><label for="pAlt">Photo description (accessibility)</label><input id="pAlt"><small>e.g. Model wearing a pink tie-dye poncho</small></div>
   </form>
-  <div class="df"><button class="btn danger" id="pArchive" type="button">Archivar</button><span style="flex:1"></span>
-    <button class="btn" data-close type="button">Cancelar</button><button class="btn primary" id="pSave" type="button">Guardar</button></div>
+  <div class="df"><button class="btn danger" id="pArchive" type="button">Archive</button><span style="flex:1"></span>
+    <button class="btn" data-close type="button">Cancel</button><button class="btn primary" id="pSave" type="button">Save</button></div>
 </dialog>
 
-<!-- pedido -->
+<!-- order -->
 <dialog id="dlgOrder" aria-labelledby="doT">
-  <div class="dh"><h3 id="doT">Pedido</h3><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="dh"><h3 id="doT">Order</h3><button class="x" data-close aria-label="Close">×</button></div>
   <div class="db" id="orderBody"></div>
   <div class="df" id="orderFoot"></div>
 </dialog>
 
-<!-- pedido de prueba -->
+<!-- test order -->
 <dialog id="dlgTest" aria-labelledby="dtT">
-  <div class="dh"><h3 id="dtT">Pedido de prueba</h3><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="dh"><h3 id="dtT">Test order</h3><button class="x" data-close aria-label="Close">×</button></div>
   <form class="f db" id="testForm">
-    <div class="field full"><p style="margin:0;color:var(--muted)">Simula una compra sin pasar por Stripe: crea el pedido, descuenta 1 unidad del stock y genera el mail de confirmación. Queda marcado como PRUEBA.</p></div>
-    <div class="field full"><label for="tProduct">Producto</label><select id="tProduct"></select></div>
-    <div class="field"><label for="tName">Nombre del cliente</label><input id="tName" value="Test Customer"></div>
-    <div class="field"><label for="tEmail">Email del cliente</label><input id="tEmail" type="email" value="juligomexdesign@gmail.com"></div>
+    <div class="field full"><p style="margin:0;color:var(--muted)">Simulates a purchase without Stripe: creates the order, takes 1 unit from stock and generates the confirmation email. It's flagged as TEST.</p></div>
+    <div class="field full"><label for="tProduct">Product</label><select id="tProduct"></select></div>
+    <div class="field"><label for="tName">Customer name</label><input id="tName" value="Test Customer"></div>
+    <div class="field"><label for="tEmail">Customer email</label><input id="tEmail" type="email" value="juligomexdesign@gmail.com"></div>
   </form>
-  <div class="df"><button class="btn" data-close type="button">Cancelar</button><button class="btn primary" id="tCreate" type="button">Crear pedido</button></div>
+  <div class="df"><button class="btn" data-close type="button">Cancel</button><button class="btn primary" id="tCreate" type="button">Create order</button></div>
 </dialog>
 
 <div class="toast" id="toast" role="status"></div>
@@ -273,10 +273,10 @@ dialog .df{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;borde
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const usd = (c) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format((c || 0) / 100);
-const date = (s) => s ? new Date(s).toLocaleString("es", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "—";
-const STATUS = { paid: "Para enviar", shipped: "Enviado", delivered: "Entregado", cancelled: "Cancelado", refunded: "Reembolsado" };
-const PSTATUS = { active: "Activo", draft: "Borrador", archived: "Archivado" };
-const MAILST = { sent: "Enviado", logged: "Registrado", failed: "Falló" };
+const date = (s) => s ? new Date(s).toLocaleString("en-US", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "—";
+const STATUS = { paid: "To ship", shipped: "Shipped", delivered: "Delivered", cancelled: "Cancelled", refunded: "Refunded" };
+const PSTATUS = { active: "Active", draft: "Draft", archived: "Archived" };
+const MAILST = { sent: "Sent", logged: "Logged", failed: "Failed" };
 
 async function api(path, opts = {}) {
   const r = await fetch("/api/admin" + path, { headers: { "content-type": "application/json" }, ...opts, body: opts.body && typeof opts.body !== "string" && !(opts.body instanceof Blob) ? JSON.stringify(opts.body) : opts.body });
@@ -288,7 +288,7 @@ function toast(msg, err) { const t = $("#toast"); t.textContent = msg; t.classLi
 const fail = (e) => toast(e.message || String(e), true);
 $$("[data-close]").forEach((b) => b.addEventListener("click", () => b.closest("dialog").close()));
 
-/* pestañas */
+/* tabs */
 const loaders = {};
 function show(tab) {
   $$("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab));
@@ -298,46 +298,46 @@ function show(tab) {
 }
 $$("nav.tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
 
-/* estado e integraciones */
+/* status & integrations */
 let STATUS_DATA = null;
 async function loadStatus() {
   STATUS_DATA = await api("/status");
-  $("#who").innerHTML = `Entraste como <b>${esc(STATUS_DATA.you)}</b> · <a href="/">ver tienda</a>`;
+  $("#who").innerHTML = `Signed in as <b>${esc(STATUS_DATA.you)}</b> · <a href="/">view store</a>`;
   const i = STATUS_DATA.integrations;
-  $("#testNote").innerHTML = !i.stripe ? `<div class="note"><b>Modo prueba:</b> Stripe todavía no está conectado, así que la tienda no cobra. Usá "Crear pedido de prueba" para practicar el flujo completo.</div>` : "";
+  $("#testNote").innerHTML = !i.stripe ? `<div class="note"><b>Test mode:</b> Stripe isn't connected yet, so the store can't take payments. Use "Create test order" to try the full flow.</div>` : "";
 }
 
-/* RESUMEN */
-loaders.resumen = async () => {
+/* OVERVIEW */
+loaders.overview = async () => {
   const s = await api("/summary");
   $("#sToShip").textContent = s.to_ship; $("#sOrders").textContent = s.orders; $("#sRevenue").textContent = usd(s.revenue_cents); $("#sStock").textContent = s.units_in_stock;
   $("#nShip").textContent = s.to_ship;
-  $("#recent").innerHTML = s.recent.length ? `<table><tbody>${s.recent.map((o) => `<tr class="click" data-id="${o.id}"><td><b>${esc(o.number)}</b> ${o.is_test ? '<span class="pill test">Prueba</span>' : ""}</td><td>${esc(o.name || o.email)}</td><td>${usd(o.total_cents)}</td><td><span class="pill ${o.status}">${STATUS[o.status]}</span></td></tr>`).join("")}</tbody></table>` : `<div class="empty">Todavía no hay pedidos.</div>`;
+  $("#recent").innerHTML = s.recent.length ? `<table><tbody>${s.recent.map((o) => `<tr class="click" data-id="${o.id}"><td><b>${esc(o.number)}</b> ${o.is_test ? '<span class="pill test">Test</span>' : ""}</td><td>${esc(o.name || o.email)}</td><td>${usd(o.total_cents)}</td><td><span class="pill ${o.status}">${STATUS[o.status]}</span></td></tr>`).join("")}</tbody></table>` : `<div class="empty">No orders yet.</div>`;
   $$("#recent tr").forEach((tr) => tr.addEventListener("click", () => openOrder(+tr.dataset.id)));
-  $("#low").innerHTML = s.low_stock.length ? s.low_stock.map((p) => `<p style="margin:0 0 8px">${esc(p.name)} — <span class="low">${p.stock} u.</span></p>`).join("") : `<div class="empty">Todo bien de stock.</div>`;
+  $("#low").innerHTML = s.low_stock.length ? s.low_stock.map((p) => `<p style="margin:0 0 8px">${esc(p.name)} — <span class="low">${p.stock} left</span></p>`).join("") : `<div class="empty">Stock looks good.</div>`;
 };
 
-/* PRODUCTOS */
+/* PRODUCTS */
 let PRODUCTS = [];
-loaders.productos = async () => {
+loaders.products = async () => {
   PRODUCTS = (await api("/products")).products;
   $("#prodRows").innerHTML = PRODUCTS.length ? PRODUCTS.map((p) => `<tr>
     <td>${p.image_url ? `<img class="thumb" src="${esc(p.image_url)}" alt="">` : '<span class="thumb"></span>'}</td>
     <td><b>${esc(p.name)}</b><br><small style="color:var(--muted)">${esc(p.size_label)}</small></td>
     <td>${usd(p.price_cents)}</td>
-    <td><span class="stock"><input type="number" min="0" value="${p.stock}" data-stock="${p.id}" aria-label="Stock de ${esc(p.name)}">${p.stock <= 5 ? '<span class="low">bajo</span>' : ""}</span></td>
+    <td><span class="stock"><input type="number" min="0" value="${p.stock}" data-stock="${p.id}" aria-label="Stock for ${esc(p.name)}">${p.stock <= 5 ? '<span class="low">low</span>' : ""}</span></td>
     <td>${p.sold}</td>
     <td><span class="pill ${p.status}">${PSTATUS[p.status]}</span></td>
-    <td><button class="btn small" data-edit="${p.id}">Editar</button></td></tr>`).join("") : `<tr><td colspan="7" class="empty">No hay productos.</td></tr>`;
+    <td><button class="btn small" data-edit="${p.id}">Edit</button></td></tr>`).join("") : `<tr><td colspan="7" class="empty">No products yet.</td></tr>`;
   $$("[data-stock]").forEach((inp) => inp.addEventListener("change", async () => {
-    try { await api(`/products/${inp.dataset.stock}`, { method: "PUT", body: { stock: +inp.value } }); toast("Stock actualizado"); loaders.productos(); } catch (e) { fail(e); }
+    try { await api(`/products/${inp.dataset.stock}`, { method: "PUT", body: { stock: +inp.value } }); toast("Stock updated"); loaders.products(); } catch (e) { fail(e); }
   }));
   $$("[data-edit]").forEach((b) => b.addEventListener("click", () => openProduct(PRODUCTS.find((p) => p.id == b.dataset.edit))));
 };
 let editing = null, imgUrl = "";
 function openProduct(p) {
   editing = p || null; imgUrl = p?.image_url || "";
-  $("#dpT").textContent = p ? "Editar producto" : "Nuevo producto";
+  $("#dpT").textContent = p ? "Edit product" : "New product";
   $("#pName").value = p?.name || ""; $("#pDesc").value = p?.description || "";
   $("#pPrice").value = p ? (p.price_cents / 100).toFixed(2) : ""; $("#pStock").value = p?.stock ?? 10;
   $("#pSize").value = p?.size_label || "One size (fits XL) · Baggy unisex"; $("#pShip").value = p?.ship_date || "in early 2027";
@@ -356,7 +356,7 @@ $("#pFile").addEventListener("change", async () => {
     const blob = await new Promise((r) => c.toBlob(r, "image/webp", .82));
     const res = await fetch("/api/admin/images", { method: "POST", headers: { "content-type": "image/webp" }, body: blob });
     const d = await res.json(); if (!res.ok) throw new Error(d.error);
-    imgUrl = d.url; $("#pImg").src = imgUrl; toast("Foto subida");
+    imgUrl = d.url; $("#pImg").src = imgUrl; toast("Photo uploaded");
   } catch (e) { fail(e); }
 });
 $("#pSave").addEventListener("click", async () => {
@@ -366,69 +366,69 @@ $("#pSave").addEventListener("click", async () => {
     sort: +$("#pSort").value, image_url: imgUrl, image_alt: $("#pAlt").value.trim() };
   try {
     if (editing) await api(`/products/${editing.id}`, { method: "PUT", body }); else await api("/products", { method: "POST", body });
-    $("#dlgProduct").close(); toast("Producto guardado"); loaders.productos();
+    $("#dlgProduct").close(); toast("Product saved"); loaders.products();
   } catch (e) { fail(e); }
 });
 $("#pArchive").addEventListener("click", async () => {
   if (!editing) return;
-  try { await api(`/products/${editing.id}`, { method: "DELETE" }); $("#dlgProduct").close(); toast("Producto archivado"); loaders.productos(); } catch (e) { fail(e); }
+  try { await api(`/products/${editing.id}`, { method: "DELETE" }); $("#dlgProduct").close(); toast("Product archived"); loaders.products(); } catch (e) { fail(e); }
 });
 
-/* PEDIDOS */
+/* ORDERS */
 let ORDERS = [], filter = "all";
-loaders.pedidos = async () => {
+loaders.orders = async () => {
   ORDERS = (await api(`/orders?status=${filter}`)).orders;
   $("#orderRows").innerHTML = ORDERS.length ? ORDERS.map((o) => `<tr class="click" data-id="${o.id}">
-    <td><b>${esc(o.number)}</b> ${o.is_test ? '<span class="pill test">Prueba</span>' : ""}</td><td>${date(o.created_at)}</td>
+    <td><b>${esc(o.number)}</b> ${o.is_test ? '<span class="pill test">Test</span>' : ""}</td><td>${date(o.created_at)}</td>
     <td>${esc(o.name)}<br><small style="color:var(--muted)">${esc(o.email)}</small></td>
     <td>${o.items.map((i) => `${i.qty} × ${esc(i.name)}`).join("<br>")}</td><td>${usd(o.total_cents)}</td>
-    <td><span class="pill ${o.status}">${STATUS[o.status]}</span></td></tr>`).join("") : `<tr><td colspan="6" class="empty">No hay pedidos en este estado.</td></tr>`;
+    <td><span class="pill ${o.status}">${STATUS[o.status]}</span></td></tr>`).join("") : `<tr><td colspan="6" class="empty">No orders with this status.</td></tr>`;
   $$("#orderRows tr[data-id]").forEach((tr) => tr.addEventListener("click", () => openOrder(+tr.dataset.id)));
 };
 $$("#orderFilters button").forEach((b) => b.addEventListener("click", () => {
-  filter = b.dataset.s; $$("#orderFilters button").forEach((x) => x.setAttribute("aria-pressed", x === b)); loaders.pedidos().catch(fail);
+  filter = b.dataset.s; $$("#orderFilters button").forEach((x) => x.setAttribute("aria-pressed", x === b)); loaders.orders().catch(fail);
 }));
 async function openOrder(id) {
   let o = ORDERS.find((x) => x.id === id);
   if (!o) { ORDERS = (await api("/orders?status=all")).orders; o = ORDERS.find((x) => x.id === id); }
   if (!o) return;
   const a = o.address || {};
-  $("#doT").textContent = `Pedido ${o.number}`;
+  $("#doT").textContent = `Order ${o.number}`;
   $("#orderBody").innerHTML = `
-    <p style="margin:0 0 14px"><span class="pill ${o.status}">${STATUS[o.status]}</span> ${o.is_test ? '<span class="pill test">Prueba</span>' : ""} <small style="color:var(--muted)">· ${date(o.created_at)}</small></p>
-    <dl class="kv"><dt>Cliente</dt><dd>${esc(o.name)}</dd><dt>Email</dt><dd><a href="mailto:${esc(o.email)}">${esc(o.email)}</a></dd>
-      ${o.phone ? `<dt>Teléfono</dt><dd>${esc(o.phone)}</dd>` : ""}
-      <dt>Dirección</dt><dd>${esc([a.line1, a.line2].filter(Boolean).join(", "))}<br>${esc([a.city, a.state, a.postal_code].filter(Boolean).join(", "))}<br>${esc(a.country || "")}</dd>
-      ${o.tracking ? `<dt>Envío</dt><dd>${esc(o.carrier)} · ${esc(o.tracking)} ${o.tracking_url ? `· <a href="${esc(o.tracking_url)}" target="_blank" rel="noopener">seguir</a>` : ""}<br><small>${date(o.shipped_at)}</small></dd>` : ""}</dl>
+    <p style="margin:0 0 14px"><span class="pill ${o.status}">${STATUS[o.status]}</span> ${o.is_test ? '<span class="pill test">Test</span>' : ""} <small style="color:var(--muted)">· ${date(o.created_at)}</small></p>
+    <dl class="kv"><dt>Customer</dt><dd>${esc(o.name)}</dd><dt>Email</dt><dd><a href="mailto:${esc(o.email)}">${esc(o.email)}</a></dd>
+      ${o.phone ? `<dt>Phone</dt><dd>${esc(o.phone)}</dd>` : ""}
+      <dt>Address</dt><dd>${esc([a.line1, a.line2].filter(Boolean).join(", "))}<br>${esc([a.city, a.state, a.postal_code].filter(Boolean).join(", "))}<br>${esc(a.country || "")}</dd>
+      ${o.tracking ? `<dt>Shipping</dt><dd>${esc(o.carrier)} · ${esc(o.tracking)} ${o.tracking_url ? `· <a href="${esc(o.tracking_url)}" target="_blank" rel="noopener">track</a>` : ""}<br><small>${date(o.shipped_at)}</small></dd>` : ""}</dl>
     <div class="items">${o.items.map((i) => `<div><span>${i.qty} × ${esc(i.name)} <small style="color:var(--muted)">(${esc(i.size)})</small></span><span>${usd(i.price_cents * i.qty)}</span></div>`).join("")}
-      ${o.shipping_cents ? `<div style="font-weight:400"><span>Envío</span><span>${usd(o.shipping_cents)}</span></div>` : ""}<div><span>Total</span><span>${usd(o.total_cents)}</span></div></div>
-    ${o.status === "paid" ? `<form class="f" id="shipForm"><div class="field full"><h3 style="font-size:14px">Marcar como enviado</h3></div>
-      <div class="field"><label for="sCarrier">Empresa de envío</label><input id="sCarrier" placeholder="Correios, DHL, UPS…"></div>
-      <div class="field"><label for="sTrack">Número de seguimiento</label><input id="sTrack"></div>
-      <div class="field full"><label for="sUrl">Link de seguimiento (opcional)</label><input id="sUrl" type="url" placeholder="https://"></div>
-      <div class="field full"><label style="display:flex;gap:8px;align-items:center;text-transform:none;font-stretch:100%;font-weight:600;font-size:14px;letter-spacing:0"><input type="checkbox" id="sNotify" checked style="width:auto"> Mandarle al cliente el mail de "pedido enviado"</label></div></form>` : ""}
-    <div class="field full" style="margin-top:12px"><label for="oNote">Nota interna</label><textarea id="oNote" style="min-height:70px">${esc(o.note || "")}</textarea></div>`;
+      ${o.shipping_cents ? `<div style="font-weight:400"><span>Shipping</span><span>${usd(o.shipping_cents)}</span></div>` : ""}<div><span>Total</span><span>${usd(o.total_cents)}</span></div></div>
+    ${o.status === "paid" ? `<form class="f" id="shipForm"><div class="field full"><h3 style="font-size:14px">Mark as shipped</h3></div>
+      <div class="field"><label for="sCarrier">Carrier</label><input id="sCarrier" placeholder="USPS, DHL, Correios…"></div>
+      <div class="field"><label for="sTrack">Tracking number</label><input id="sTrack"></div>
+      <div class="field full"><label for="sUrl">Tracking link (optional)</label><input id="sUrl" type="url" placeholder="https://"></div>
+      <div class="field full"><label style="display:flex;gap:8px;align-items:center;text-transform:none;font-stretch:100%;font-weight:600;font-size:14px;letter-spacing:0"><input type="checkbox" id="sNotify" checked style="width:auto"> Send the customer the "order shipped" email</label></div></form>` : ""}
+    <div class="field full" style="margin-top:12px"><label for="oNote">Internal note</label><textarea id="oNote" style="min-height:70px">${esc(o.note || "")}</textarea></div>`;
   const foot = $("#orderFoot");
-  foot.innerHTML = `<select id="oStatus" class="btn" aria-label="Cambiar estado">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === o.status ? "selected" : ""}>${v}</option>`).join("")}</select>
-    <button class="btn" id="oSaveSt" type="button">Guardar estado y nota</button><span style="flex:1"></span>
-    ${o.status === "paid" ? `<button class="btn primary" id="oShip" type="button">Marcar como enviado</button>` : `<button class="btn" data-close type="button">Cerrar</button>`}`;
+  foot.innerHTML = `<select id="oStatus" class="btn" aria-label="Change status">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === o.status ? "selected" : ""}>${v}</option>`).join("")}</select>
+    <button class="btn" id="oSaveSt" type="button">Save status & note</button><span style="flex:1"></span>
+    ${o.status === "paid" ? `<button class="btn primary" id="oShip" type="button">Mark as shipped</button>` : `<button class="btn" data-close type="button">Close</button>`}`;
   foot.querySelector("[data-close]")?.addEventListener("click", () => $("#dlgOrder").close());
   $("#oSaveSt").addEventListener("click", async () => {
-    try { await api(`/orders/${o.id}`, { method: "PUT", body: { status: $("#oStatus").value, note: $("#oNote").value } }); toast("Pedido actualizado"); $("#dlgOrder").close(); refresh(); } catch (e) { fail(e); }
+    try { await api(`/orders/${o.id}`, { method: "PUT", body: { status: $("#oStatus").value, note: $("#oNote").value } }); toast("Order updated"); $("#dlgOrder").close(); refresh(); } catch (e) { fail(e); }
   });
   $("#oShip")?.addEventListener("click", async () => {
     try {
       const r = await api(`/orders/${o.id}/ship`, { method: "POST", body: { carrier: $("#sCarrier").value.trim(), tracking: $("#sTrack").value.trim(), tracking_url: $("#sUrl").value.trim(), notify: $("#sNotify").checked } });
       if ($("#oNote").value !== (o.note || "")) await api(`/orders/${o.id}`, { method: "PUT", body: { note: $("#oNote").value } });
-      toast(r.mail === "sent" ? "Enviado ✓ — se mandó el mail al cliente" : r.mail === "logged" ? "Enviado ✓ — mail registrado (falta conectar el servicio de mails)" : r.mail === "failed" ? "Enviado ✓ pero el mail falló (ver Mails)" : "Marcado como enviado");
+      toast(r.mail === "sent" ? "Shipped ✓ Email sent to the customer" : r.mail === "logged" ? "Shipped ✓ Email logged (email service not connected yet)" : r.mail === "failed" ? "Shipped ✓ but the email failed (see Emails)" : "Marked as shipped");
       $("#dlgOrder").close(); refresh();
     } catch (e) { fail(e); }
   });
   $("#dlgOrder").showModal();
 }
-function refresh() { const t = $("nav.tabs [aria-selected=true]").dataset.tab; loaders[t]?.().catch(fail); if (t !== "resumen") loaders.resumen().catch(() => {}); }
+function refresh() { const t = $("nav.tabs [aria-selected=true]").dataset.tab; loaders[t]?.().catch(fail); if (t !== "overview") loaders.overview().catch(() => {}); }
 
-/* pedido de prueba */
+/* test order */
 $("#btnTest").addEventListener("click", async () => {
   try {
     const ps = (await api("/products")).products.filter((p) => p.status !== "archived");
@@ -438,10 +438,10 @@ $("#btnTest").addEventListener("click", async () => {
 });
 $("#tCreate").addEventListener("click", async () => {
   try { const r = await api("/test-order", { method: "POST", body: { product_id: +$("#tProduct").value, name: $("#tName").value, email: $("#tEmail").value } });
-    $("#dlgTest").close(); toast(`Pedido ${r.order.number} creado`); refresh(); } catch (e) { fail(e); }
+    $("#dlgTest").close(); toast(`Order ${r.order.number} created`); refresh(); } catch (e) { fail(e); }
 });
 
-/* MAILS */
+/* EMAILS */
 let TPLS = [], tplKey = "confirmation", PH = [];
 loaders.emails = async () => {
   const d = await api("/templates"); TPLS = d.templates; PH = d.placeholders;
@@ -461,41 +461,41 @@ function preview() { clearTimeout(pvT); pvT = setTimeout(async () => {
 ["input"].forEach((ev) => { $("#tplSubject").addEventListener(ev, preview); $("#tplBody").addEventListener(ev, preview); });
 $("#tplForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  try { await api(`/templates/${tplKey}`, { method: "PUT", body: { subject: $("#tplSubject").value, body: $("#tplBody").value } }); toast("Mail guardado"); TPLS = (await api("/templates")).templates; } catch (err) { fail(err); }
+  try { await api(`/templates/${tplKey}`, { method: "PUT", body: { subject: $("#tplSubject").value, body: $("#tplBody").value } }); toast("Email saved"); TPLS = (await api("/templates")).templates; } catch (err) { fail(err); }
 });
 $("#tplReset").addEventListener("click", async () => {
-  try { await api(`/templates/${tplKey}/reset`, { method: "POST" }); TPLS = (await api("/templates")).templates; fillTpl(); toast("Texto original restaurado"); } catch (e) { fail(e); }
+  try { await api(`/templates/${tplKey}/reset`, { method: "POST" }); TPLS = (await api("/templates")).templates; fillTpl(); toast("Original text restored"); } catch (e) { fail(e); }
 });
 async function loadOutbox() {
   const { outbox } = await api("/outbox");
-  $("#outbox").innerHTML = outbox.length ? `<table><thead><tr><th>Fecha</th><th>Para</th><th>Asunto</th><th>Estado</th></tr></thead><tbody>${outbox.map((m) => `<tr class="click" data-id="${m.id}"><td>${date(m.created_at)}</td><td>${esc(m.to_email)}</td><td>${esc(m.subject)}</td><td><span class="pill ${m.status}" title="${esc(m.error)}">${MAILST[m.status]}</span></td></tr>`).join("")}</tbody></table>` : `<div class="empty">Todavía no se generó ningún mail.</div>`;
+  $("#outbox").innerHTML = outbox.length ? `<table><thead><tr><th>Date</th><th>To</th><th>Subject</th><th>Status</th></tr></thead><tbody>${outbox.map((m) => `<tr class="click" data-id="${m.id}"><td>${date(m.created_at)}</td><td>${esc(m.to_email)}</td><td>${esc(m.subject)}</td><td><span class="pill ${m.status}" title="${esc(m.error)}">${MAILST[m.status]}</span></td></tr>`).join("")}</tbody></table>` : `<div class="empty">No emails yet.</div>`;
   $$("#outbox tr[data-id]").forEach((tr) => tr.addEventListener("click", () => window.open(`/api/admin/outbox/${tr.dataset.id}`, "_blank", "noopener")));
 }
 
-/* CONFIG */
-loaders.config = async () => {
+/* SETTINGS */
+loaders.settings = async () => {
   await loadStatus();
   const i = STATUS_DATA.integrations;
-  const item = (on, title, desc, steps) => `<div class="check ${on ? "on" : ""}"><span class="dot">${on ? "✓" : ""}</span><div><h4>${title}</h4><p>${desc}</p>${!on && steps ? `<ol>${steps.map((s) => `<li>${s}</li>`).join("")}</ol>` : ""}</div><span class="pill ${on ? "on" : "off"}">${on ? "Conectado" : "Falta"}</span></div>`;
+  const item = (on, title, desc, steps) => `<div class="check ${on ? "on" : ""}"><span class="dot">${on ? "✓" : ""}</span><div><h4>${title}</h4><p>${desc}</p>${!on && steps ? `<ol>${steps.map((s) => `<li>${s}</li>`).join("")}</ol>` : ""}</div><span class="pill ${on ? "on" : "off"}">${on ? "Connected" : "Missing"}</span></div>`;
   $("#checklist").innerHTML = [
-    item(true, "Base de datos", "Productos, stock, pedidos y clientes se guardan en Cloudflare D1."),
-    item(i.access, "Acceso seguro al panel", "Solo tu Gmail puede abrir /admin (Cloudflare Access).",
-      ["Pedile a Claude los pasos de Cloudflare Access y pasale el Team domain y el AUD tag."]),
-    item(i.email, "Envío de mails (Resend)", i.email ? `Los mails salen desde ${esc(i.mail_from)}.` : "Mientras falte, los mails se guardan en la pestaña Mails pero no se envían.",
-      ["Crear cuenta gratis en resend.com", "Agregar el dominio dameunaola.com (se conecta con Cloudflare en 1 clic)", "Crear una API key y cargarla en Cloudflare como secreto RESEND_API_KEY"]),
-    item(i.stripe, `Pagos (Stripe)${i.stripe ? " — modo " + (i.stripe_mode === "live" ? "REAL" : "prueba") : ""}`, i.stripe ? "El botón Pre-order abre el checkout de Stripe." : "Mientras falte, el botón Pre-order avisa que las ventas abren pronto.",
-      ["Crear cuenta en stripe.com (podés usar el modo prueba sin activar la cuenta)", "Copiar la Secret key de prueba (sk_test_…)", "Cargarla en Cloudflare como secreto STRIPE_SECRET_KEY"]),
-    item(i.stripe_webhook, "Aviso de Stripe al sitio (webhook)", "Hace que cada pago se convierta en un pedido del panel y descuente stock.",
-      ["En Stripe → Developers → Webhooks, agregar el endpoint https://dameunaola.com/api/stripe/webhook con el evento checkout.session.completed", "Copiar el Signing secret (whsec_…) y cargarlo como secreto STRIPE_WEBHOOK_SECRET"]),
-    item(true, "Países de envío", `Stripe pide dirección de: ${esc(STATUS_DATA.ship_countries)}. Para cambiarlos, pedíselo a Claude.`),
+    item(true, "Database", "Products, stock, orders and customers are stored in Cloudflare D1."),
+    item(i.access, "Secure admin access", "Only your Gmail can open /admin (Cloudflare Access).",
+      ["Set up a Cloudflare Access application for /admin and add its team domain and AUD tag to wrangler.jsonc."]),
+    item(i.email, "Email delivery (Resend)", i.email ? `Emails are sent from ${esc(i.mail_from)}.` : "Until this is connected, emails are saved in the Emails tab but not sent.",
+      ["Create a free account at resend.com", "Add the domain dameunaola.com (connects to Cloudflare in one click)", "Create an API key and add it in Cloudflare as the secret RESEND_API_KEY"]),
+    item(i.stripe, `Payments (Stripe)${i.stripe ? " · " + (i.stripe_mode === "live" ? "LIVE" : "test") + " mode" : ""}`, i.stripe ? "The Pre-order button opens Stripe Checkout." : "Until this is connected, the Pre-order button says pre-orders open soon.",
+      ["Create a Stripe account (test mode works without activating it)", "Copy the test Secret key (sk_test_…)", "Add it in Cloudflare as the secret STRIPE_SECRET_KEY"]),
+    item(i.stripe_webhook, "Stripe webhook", "Turns every payment into an order here and updates stock.",
+      ["In Stripe → Developers → Webhooks, add the endpoint https://dameunaola.com/api/stripe/webhook with the event checkout.session.completed", "Copy the Signing secret (whsec_…) and add it as the secret STRIPE_WEBHOOK_SECRET"]),
+    item(true, "Shipping countries", `Checkout accepts addresses in: ${esc(STATUS_DATA.ship_countries)}. Edit SHIP_COUNTRIES in wrangler.jsonc to change them.`),
   ].join("");
 };
 
-/* inicio */
-loadStatus().then(() => { const h = (location.hash || "").slice(1); show(["resumen","productos","pedidos","emails","config"].includes(h) ? h : "resumen"); }).catch((e) => {
-  document.querySelector("main").innerHTML = `<div class="note" style="margin-top:24px"><b>No se pudo abrir el panel.</b> ${esc(e.message)}</div>`;
+/* start */
+loadStatus().then(() => { const h = (location.hash || "").slice(1); show(["overview","products","orders","emails","settings"].includes(h) ? h : "overview"); }).catch((e) => {
+  document.querySelector("main").innerHTML = `<div class="note" style="margin-top:24px"><b>The admin couldn't load.</b> ${esc(e.message)}</div>`;
 });
-loaders.resumen().catch(() => {});
+loaders.overview().catch(() => {});
 })();
 </script>
 </body>
